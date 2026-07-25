@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ornamental Plants Guide</title>
+
+  <!-- Bootstrap -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --main-green: #0b7a34;
+      --dark-green: #064f24;
+      --soft-green: #eaf7ee;
+      --light-bg: #f6fbf7;
+      --text-dark: #163020;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f7fff9, #eef7f0);
+      color: var(--text-dark);
+    }
+
+    .navbar-brand {
+      color: var(--main-green) !important;
+      font-weight: 800;
+      font-size: 28px;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: var(--main-green) !important;
+    }
+
+    .hero {
+      padding: 70px 20px 45px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top left, rgba(11, 122, 52, 0.16), transparent 35%),
+        linear-gradient(135deg, #f8fff9, #eff8f1);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--soft-green);
+      color: var(--main-green);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: 44px;
+      font-weight: 900;
+      margin-bottom: 15px;
+      color: var(--dark-green);
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: 18px;
+      color: #4f5f55;
+      line-height: 1.7;
+    }
+
+    .tools-box {
+      background-color: white;
+      border-radius: 22px;
+      padding: 22px;
+      margin-top: -25px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2eee5;
+    }
+
+    .search-input,
+    .filter-select {
+      border-radius: 14px;
+      padding: 13px 15px;
+      border: 1px solid #cfded4;
+    }
+
+    .search-input:focus,
+    .filter-select:focus {
+      border-color: var(--main-green);
+      box-shadow: 0 0 0 0.2rem rgba(11, 122, 52, 0.14);
+    }
+
+    .plant-card {
+      height: 100%;
+      border: none;
+      border-radius: 22px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      transition: 0.25s ease;
+      border: 1px solid #e5efe7;
+    }
+
+    .plant-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.13);
+    }
+
+    .plant-img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      background-color: #eaf7ee;
+    }
+
+    .plant-card .card-body {
+      padding: 22px;
+    }
+
+    .plant-name {
+      color: var(--dark-green);
+      font-weight: 850;
+      font-size: 23px;
+      margin-bottom: 3px;
+    }
+
+    .scientific-name {
+      color: #6d7b72;
+      font-style: italic;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .info-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-bottom: 10px;
+      color: #36463c;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .info-line i {
+      color: var(--main-green);
+      font-size: 18px;
+      margin-top: 2px;
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .level-easy {
+      background-color: #e4f8ea;
+      color: #137333;
+    }
+
+    .level-medium {
+      background-color: #fff4d8;
+      color: #9a6700;
+    }
+
+    .tip-box {
+      background-color: #f3faf5;
+      border-left: 4px solid var(--main-green);
+      padding: 12px;
+      border-radius: 12px;
+      color: #44524a;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .empty-message {
+      display: none;
+      text-align: center;
+      padding: 50px 20px;
+      color: #68766d;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 25px;
+      text-align: center;
+      color: #6d7b72;
+      background-color: white;
+      border-top: 1px solid #e4eee6;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .plant-img {
+        height: 190px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        MyPlant <i class="bi bi-leaf-fill"></i>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active text-success fw-bold" href="plants.html">Plants</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="Infectious Diseases.html">Diseases</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="Feedback.html">Feedback</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="community.html">Help</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#about">About</a>
+          </li>
+
+          <li class="nav-item ms-lg-3">
+            <span class="nav-link" style="cursor:pointer;">
+              <i class="bi bi-globe"></i> AR | EN
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <i class="bi bi-flower1"></i>
+      Ornamental Plants Guide
+    </div>
+
+    <h1>Explore Popular Ornamental Plants</h1>
+
+    <p>
+      Browse common indoor and ornamental plants with basic care information such as
+      light needs, watering frequency, care level, and simple tips for beginners.
+    </p>
+  </section>
+
+  <!-- Search and Filter -->
+  <section class="container">
+    <div class="tools-box">
+      <div class="row g-3 align-items-center">
+        <div class="col-lg-8">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-success"></i>
+            </span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="form-control search-input border-start-0" 
+              placeholder="Search by plant name..."
+              onkeyup="renderPlants()"
+            >
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <select id="levelFilter" class="form-select filter-select" onchange="renderPlants()">
+            <option value="All">All Care Levels</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plants Cards -->
+  <main class="container py-5">
+    <div id="plantsContainer" class="row g-4"></div>
+
+    <div id="emptyMessage" class="empty-message">
+      <i class="bi bi-search"></i>
+      No plants found. Try another name or filter.
+    </div>
+  </main>
+
+  <footer>
+    MyPlant © 2026 — Ornamental Plants Guide
+  </footer>
+
+  <script>
+    const plants = [
+      {
+        name: "Pothos",
+        scientific: "Epipremnum aureum",
+        image: "images/pothos.jpg",
+        light: "Bright indirect light",
+        water: "Every 7–10 days",
+        level: "Easy",
+        tip: "Allow the soil to dry slightly between watering."
+      },
+      {
+        name: "Snake Plant",
+        scientific: "Sansevieria trifasciata",
+        image: "images/snake-plant.jpg",
+        light: "Low to bright indirect light",
+        water: "Every 2–3 weeks",
+        level: "Easy",
+        tip: "Very tolerant plant, but avoid overwatering."
+      },
+      {
+        name: "Spider Plant",
+        scientific: "Chlorophytum comosum",
+        image: "images/spider-plant.jpg",
+        light: "Bright indirect light",
+        water: "Once a week",
+        level: "Easy",
+        tip: "Good for beginners and grows well indoors."
+      },
+      {
+        name: "Peace Lily",
+        scientific: "Spathiphyllum",
+        image: "images/peace-lily.jpg",
+        light: "Low to medium indirect light",
+        water: "Keep soil slightly moist",
+        level: "Easy",
+        tip: "Leaves may droop when it needs water."
+      },
+      {
+        name: "Monstera",
+        scientific: "Monstera deliciosa",
+        image: "images/monstera.jpg",
+        light: "Bright indirect light",
+        water: "Every 1–2 weeks",
+        level: "Medium",
+        tip: "Provide support as it grows larger."
+      },
+      {
+        name: "Aloe Vera",
+        scientific: "Aloe barbadensis miller",
+        image: "images/aloe-vera.jpg",
+        light: "Bright light",
+        water: "Every 2–3 weeks",
+        level: "Easy",
+        tip: "Use well-draining soil and avoid soggy roots."
+      },
+      {
+        name: "ZZ Plant",
+        scientific: "Zamioculcas zamiifolia",
+        image: "images/zz-plant.jpg",
+        light: "Low to bright indirect light",
+        water: "Every 2–3 weeks",
+        level: "Easy",
+        tip: "A strong indoor plant that tolerates neglect."
+      },
+      {
+        name: "Rubber Plant",
+        scientific: "Ficus elastica",
+        image: "images/rubber-plant.jpg",
+        light: "Bright indirect light",
+        water: "Every 7–10 days",
+        level: "Medium",
+        tip: "Wipe leaves to keep them clean and shiny."
+      },
+      {
+        name: "Dracaena",
+        scientific: "Dracaena spp.",
+        image: "images/dracaena.jpg",
+        light: "Medium indirect light",
+        water: "Every 1–2 weeks",
+        level: "Easy",
+        tip: "Avoid overwatering and keep away from cold drafts."
+      },
+      {
+        name: "Jade Plant",
+        scientific: "Crassula ovata",
+        image: "images/jade-plant.jpg",
+        light: "Bright light",
+        water: "Every 2–3 weeks",
+        level: "Easy",
+        tip: "A succulent plant that prefers dry soil."
+      },
+      {
+        name: "Orchid",
+        scientific: "Orchidaceae",
+        image: "images/orchid.jpg",
+        light: "Bright indirect light",
+        water: "Once a week",
+        level: "Medium",
+        tip: "Avoid letting the roots sit in standing water."
+      },
+      {
+        name: "Ficus",
+        scientific: "Ficus benjamina",
+        image: "images/ficus.jpg",
+        light: "Bright indirect light",
+        water: "Every 7–10 days",
+        level: "Medium",
+        tip: "Does not like sudden changes in location."
+      },
+      {
+        name: "Boston Fern",
+        scientific: "Nephrolepis exaltata",
+        image: "images/boston-fern.jpg",
+        light: "Indirect light",
+        water: "Keep soil moist",
+        level: "Medium",
+        tip: "Needs humidity and regular watering."
+      },
+      {
+        name: "Lavender",
+        scientific: "Lavandula",
+        image: "images/lavender.jpg",
+        light: "Full sun / bright light",
+        water: "When soil is dry",
+        level: "Medium",
+        tip: "Needs good sunlight and well-draining soil."
+      },
+      {
+        name: "Cactus",
+        scientific: "Cactaceae",
+        image: "images/cactus.jpg",
+        light: "Bright direct light",
+        water: "Every 3–4 weeks",
+        level: "Easy",
+        tip: "Water very little and avoid wet soil."
+      },
+      {
+        name: "Calathea",
+        scientific: "Calathea spp.",
+        image: "images/calathea.jpg",
+        light: "Bright indirect light",
+        water: "Keep soil slightly moist",
+        level: "Medium",
+        tip: "Needs humidity and does not like direct sunlight."
+      },
+      {
+        name: "Chinese Money Plant",
+        scientific: "Pilea peperomioides",
+        image: "images/chinese-money-plant.jpg",
+        light: "Bright indirect light",
+        water: "Every 7–10 days",
+        level: "Easy",
+        tip: "Rotate the pot regularly for balanced growth."
+      },
+      {
+        name: "Anthurium",
+        scientific: "Anthurium andraeanum",
+        image: "images/anthurium.jpg",
+        light: "Bright indirect light",
+        water: "Once a week",
+        level: "Medium",
+        tip: "Keep it warm and avoid overwatering."
+      },
+      {
+        name: "Philodendron",
+        scientific: "Philodendron spp.",
+        image: "images/philodendron.jpg",
+        light: "Medium to bright indirect light",
+        water: "Every 7–10 days",
+        level: "Easy",
+        tip: "Let the top soil dry before watering again."
+      },
+      {
+        name: "Aglaonema",
+        scientific: "Aglaonema spp.",
+        image: "images/aglaonema.jpg",
+        light: "Low to medium light",
+        water: "Every 1–2 weeks",
+        level: "Easy",
+        tip: "A good indoor plant that tolerates low light."
+      },
+      {
+        name: "Croton",
+        scientific: "Codiaeum variegatum",
+        image: "images/croton.jpg",
+        light: "Bright light",
+        water: "Keep soil lightly moist",
+        level: "Medium",
+        tip: "Bright light helps maintain colorful leaves."
+      },
+      {
+        name: "Dieffenbachia",
+        scientific: "Dieffenbachia spp.",
+        image: "images/dieffenbachia.jpg",
+        light: "Indirect light",
+        water: "Every 7–10 days",
+        level: "Easy",
+        tip: "Avoid direct sun and avoid overwatering."
+      },
+      {
+        name: "Begonia",
+        scientific: "Begonia spp.",
+        image: "images/begonia.jpg",
+        light: "Bright indirect light",
+        water: "When top soil dries",
+        level: "Medium",
+        tip: "Avoid wetting the leaves too much."
+      },
+      {
+        name: "Fittonia",
+        scientific: "Fittonia albivenis",
+        image: "images/fittonia.jpg",
+        light: "Indirect light",
+        water: "Keep soil moist",
+        level: "Medium",
+        tip: "It needs humidity and regular watering."
+      },
+      {
+        name: "String of Pearls",
+        scientific: "Senecio rowleyanus",
+        image: "images/string-of-pearls.jpg",
+        light: "Bright indirect light",
+        water: "Every 2–3 weeks",
+        level: "Medium",
+        tip: "Use well-draining soil and avoid overwatering."
+      },
+      {
+        name: "Areca Palm",
+        scientific: "Dypsis lutescens",
+        image: "images/areca-palm.jpg",
+        light: "Bright indirect light",
+        water: "Once a week",
+        level: "Medium",
+        tip: "Good for indoor decoration and prefers humidity."
+      },
+      {
+        name: "Parlor Palm",
+        scientific: "Chamaedorea elegans",
+        image: "images/parlor-palm.jpg",
+        light: "Low to indirect light",
+        water: "Every 1–2 weeks",
+        level: "Easy",
+        tip: "Suitable for beginners and indoor spaces."
+      },
+      {
+        name: "Yucca",
+        scientific: "Yucca elephantipes",
+        image: "images/yucca.jpg",
+        light: "Bright light",
+        water: "Every 2 weeks",
+        level: "Easy",
+        tip: "It prefers dry soil and strong light."
+      },
+      {
+        name: "English Ivy",
+        scientific: "Hedera helix",
+        image: "images/english-ivy.jpg",
+        light: "Bright indirect light",
+        water: "Keep soil slightly moist",
+        level: "Medium",
+        tip: "Great as a hanging plant, but avoid overwatering."
+      },
+      {
+        name: "African Violet",
+        scientific: "Saintpaulia ionantha",
+        image: "images/african-violet.jpg",
+        light: "Bright indirect light",
+        water: "Water from the bottom",
+        level: "Medium",
+        tip: "Avoid getting water on the leaves."
+      }
+    ];
+
+    function renderPlants() {
+      const container = document.getElementById("plantsContainer");
+      const emptyMessage = document.getElementById("emptyMessage");
+      const searchValue = document.getElementById("searchInput").value.toLowerCase().trim();
+      const levelFilter = document.getElementById("levelFilter").value;
+
+      container.innerHTML = "";
+
+      const filteredPlants = plants.filter(function(plant) {
+        const matchesSearch =
+          plant.name.toLowerCase().includes(searchValue) ||
+          plant.scientific.toLowerCase().includes(searchValue);
+
+        const matchesLevel =
+          levelFilter === "All" || plant.level === levelFilter;
+
+        return matchesSearch && matchesLevel;
+      });
+
+      if (filteredPlants.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+      }
+
+      emptyMessage.style.display = "none";
+
+      filteredPlants.forEach(function(plant) {
+        const levelClass = plant.level === "Easy" ? "level-easy" : "level-medium";
+
+        container.innerHTML += `
+          <div class="col-lg-4 col-md-6">
+            <div class="card plant-card">
+              <img 
+                src="${plant.image}" 
+                class="plant-img" 
+                alt="${plant.name}"
+                onerror="this.src='images/default-plant.jpg'"
+              >
+
+              <div class="card-body">
+                <h3 class="plant-name">${plant.name}</h3>
+                <p class="scientific-name">${plant.scientific}</p>
+
+                <span class="level-badge ${levelClass}">
+                  ${plant.level} Care
+                </span>
+
+                <div class="info-line">
+                  <i class="bi bi-brightness-high"></i>
+                  <span><strong>Light:</strong> ${plant.light}</span>
+                </div>
+
+                <div class="info-line">
+                  <i class="bi bi-droplet-half"></i>
+                  <span><strong>Water:</strong> ${plant.water}</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> ${plant.tip}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    renderPlants();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

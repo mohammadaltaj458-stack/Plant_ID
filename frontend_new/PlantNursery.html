@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nearest Plant Nursery in Jordan</title>
+
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #1a3a1a;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #5a5a5a;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 14px;
+      border: 1px solid #c8d8c0;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      color: #1a1a1a;
+      direction: ltr;
+      outline: none;
+    }
+
+    .search-bar input:focus {
+      border-color: #3B6D11;
+    }
+
+    .locate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 1px solid #3B6D11;
+      border-radius: 8px;
+      background: #EAF3DE;
+      color: #3B6D11;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .locate-btn:hover {
+      background: #C0DD97;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border: 1px solid #c8d8c0;
+      border-radius: 999px;
+      font-size: 13px;
+      background: #fff;
+      color: #5a5a5a;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .filter-btn.active {
+      background: #E1F5EE;
+      color: #0F6E56;
+      border-color: #5DCAA5;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 13px;
+      color: #5a5a5a;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #639922;
+      flex-shrink: 0;
+    }
+
+    .status-dot.loading {
+      background: #BA7517;
+      animation: pulse 1s infinite;
+    }
+
+    .status-dot.error {
+      background: #E24B4A;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .nursery-card {
+      background: #fff;
+      border: 1px solid #dde8d0;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+
+    .nursery-card.nearest {
+      border: 2px solid #0F6E56;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a3a1a;
+    }
+
+    .card-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: #E1F5EE;
+      color: #0F6E56;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .card-badge.far {
+      background: #FAEEDA;
+      color: #854F0B;
+    }
+
+    .card-meta {
+      font-size: 13px;
+      color: #5a5a5a;
+      line-height: 2;
+    }
+
+    .card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions a {
+      font-size: 12px;
+      padding: 5px 12px;
+      border: 1px solid #c8d8c0;
+      border-radius: 8px;
+      color: #5a5a5a;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-actions a:hover {
+      background: #f4f6f0;
+    }
+
+    .card-actions a.primary {
+      background: #E1F5EE;
+      color: #0F6E56;
+      border-color: #5DCAA5;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #5a5a5a;
+      font-size: 14px;
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 500px) {
+      .header h1 {
+        font-size: 20px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+<!-- Navbar -->
+  <nav style="background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
+    <a href="index.html" style="color: #2e7d32; text-decoration: none; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+      MyPlant <i class="bi bi-leaf-fill" style="color: #2e7d32;"></i>
+    </a>
+    <a href="javascript:void(0)" data-lang-toggle style="cursor: pointer; color: #2e7d32; text-decoration: none; font-weight: 600;">
+      🌐 AR | EN
+    </a>
+  </nav>
+
+    <div class="header">
+      <h1>
+        <i class="ti ti-plant-2"></i>
+        <span data-translate="nearest-nursery">Nearest Plant Nursery in Jordan</span>
+      </h1>
+
+      <p data-translate="find-nearby">
+        Find nearby agricultural nurseries across Jordan
+      </p>
+    </div>
+
+    <div class="search-bar">
+
+      <input
+        type="text"
+        id="searchInput"
+        data-translate="search-placeholder"
+        placeholder="Search by nursery name, area, or plant type..."
+        oninput="filterNurseries()"
+      />
+
+      <button class="locate-btn" onclick="findNearest()">
+        <i class="ti ti-current-location"></i>
+        My Location
+      </button>
+
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active"
+        onclick="setFilter('all', this)">All</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Amman', this)">Amman</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Zarqa', this)">Zarqa</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Irbid', this)">Irbid</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Balqa', this)">Balqa</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Karak', this)">Karak</button>
+
+      <button class="filter-btn"
+        onclick="setFilter('Jerash', this)">Jerash</button>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+
+      <span id="statusText">
+        Click "My Location" to find the nearest nursery
+      </span>
+    </div>
+
+    <div class="results-grid" id="resultsGrid"></div>
+
+  </div>
+
+  <script src="translations.js"></script>
+  <script src="language.js"></script>
+
+  <script>
+
+
+
+
+const nurseries = [
+
+  {
+    name: "Princess Plant Nursery",
+    city: "Amman",
+    region: "Sweifieh",
+    lat: 31.960,
+    lng: 35.858,
+    phone: "0799001122",
+    hours: "8 AM - 8 PM",
+    specialty: "Indoor & Decorative Plants",
+    maps: "https://maps.google.com/?q=31.960,35.858"
+  },
+
+  {
+    name: "Jordan Green Nursery",
+    city: "Amman",
+    region: "Marj Al Hammam",
+    lat: 31.918,
+    lng: 35.840,
+    phone: "0788234567",
+    hours: "7 AM - 7 PM",
+    specialty: "Fruit Trees & Olive Trees",
+    maps: "https://maps.google.com/?q=31.918,35.840"
+  },
+
+  {
+    name: "Jordan Gardens Nursery",
+    city: "Amman",
+    region: "Marka",
+    lat: 31.983,
+    lng: 35.978,
+    phone: "0771456789",
+    hours: "8 AM - 6 PM",
+    specialty: "Outdoor Plants & Trees",
+    maps: "https://maps.google.com/?q=31.983,35.978"
+  },
+
+  {
+    name: "Green Valley Nursery",
+    city: "Zarqa",
+    region: "New Zarqa",
+    lat: 32.070,
+    lng: 36.093,
+    phone: "0795678901",
+    hours: "7 AM - 7 PM",
+    specialty: "Flowers & Seasonal Plants",
+    maps: "https://maps.google.com/?q=32.070,36.093"
+  },
+
+  {
+    name: "Northern Agricultural Nursery",
+    city: "Irbid",
+    region: "Downtown Irbid",
+    lat: 32.556,
+    lng: 35.851,
+    phone: "0777890123",
+    hours: "6 AM - 8 PM",
+    specialty: "Vegetables & Herbs",
+    maps: "https://maps.google.com/?q=32.556,35.851"
+  },
+
+  {
+    name: "Flourit Plant Nursery",
+    city: "Amman",
+    region: "Badr",
+    lat: 31.955,
+    lng: 35.910,
+    phone: "0781000110",
+    hours: "Open 24 Hours",
+    specialty: "Plants & Garden Supplies",
+    maps: "https://maps.google.com/?q=31.955,35.910"
+  },
+
+  {
+    name: "In Group Nurseries Sun",
+    city: "Amman",
+    region: "Tla Al Ali",
+    lat: 31.995,
+    lng: 35.860,
+    phone: "0790000000",
+    hours: "8 AM - 9 PM",
+    specialty: "Plant Nursery & Landscaping",
+    maps: "https://maps.google.com/?q=31.995,35.860"
+  },
+
+  {
+    name: "Yasamin Landscaping & Garden Center",
+    city: "Amman",
+    region: "Airport Road",
+    lat: 31.870,
+    lng: 35.900,
+    phone: "064122047",
+    hours: "8:30 AM - 5:30 PM",
+    specialty: "Landscaping & Imported Plants",
+    maps: "https://maps.google.com/?q=31.870,35.900"
+  },
+
+  {
+    name: "Pretty Plant Nursery",
+    city: "Amman",
+    region: "Tareq",
+    lat: 31.990,
+    lng: 35.950,
+    phone: "0791326251",
+    hours: "6:30 AM - 6 PM",
+    specialty: "Garden Plants & Nursery",
+    maps: "https://maps.google.com/?q=31.990,35.950"
+  },
+
+  {
+    name: "Al Kawthar Nurseries",
+    city: "Amman",
+    region: "Al Safa",
+    lat: 31.940,
+    lng: 35.930,
+    phone: "0795966316",
+    hours: "8 AM - 8 PM",
+    specialty: "Agricultural Wholesale",
+    maps: "https://maps.google.com/?q=31.940,35.930"
+  },
+
+  {
+    name: "Elegant Garden Nursery",
+    city: "Balqa",
+    region: "Safout",
+    lat: 32.040,
+    lng: 35.760,
+    phone: "0785877529",
+    hours: "9 AM - 8 PM",
+    specialty: "Decorative Plants & Trees",
+    maps: "https://maps.google.com/?q=32.040,35.760"
+  },
+
+  {
+    name: "Firas Al Qadiri Nursery",
+    city: "Amman",
+    region: "Madaba Highway",
+    lat: 31.800,
+    lng: 35.920,
+    phone: "0790999595",
+    hours: "8 AM - 8 PM",
+    specialty: "Plants & Garden Supplies",
+    maps: "https://maps.google.com/?q=31.800,35.920"
+  },
+
+  {
+    name: "Ard & Ward",
+    city: "Amman",
+    region: "King Abdullah II Street",
+    lat: 31.990,
+    lng: 35.860,
+    phone: "065866855",
+    hours: "8 AM - 8 PM",
+    specialty: "Garden Center",
+    maps: "https://maps.google.com/?q=31.990,35.860"
+  },
+
+  {
+    name: "ROUGE 'N' LOVE",
+    city: "Amman",
+    region: "7th Circle",
+    lat: 31.945,
+    lng: 35.860,
+    phone: "0799801100",
+    hours: "10 AM - 8 PM",
+    specialty: "Indoor Plants & Bonsai",
+    maps: "https://maps.google.com/?q=31.945,35.860"
+  },
+
+  {
+    name: "Plant Me",
+    city: "Amman",
+    region: "Khalda",
+    lat: 32.010,
+    lng: 35.840,
+    phone: "0797777777",
+    hours: "9 AM - 9 PM",
+    specialty: "Indoor Plants",
+    maps: "https://maps.google.com/?q=32.010,35.840"
+  },
+
+  {
+    name: "Nabteh",
+    city: "Amman",
+    region: "Sweifieh",
+    lat: 31.955,
+    lng: 35.860,
+    phone: "0795555555",
+    hours: "Online Store",
+    specialty: "Gardening Supplies",
+    maps: "https://maps.google.com/?q=31.955,35.860"
+  },
+
+  {
+    name: "Green Hands",
+    city: "Amman",
+    region: "Dabouq",
+    lat: 31.995,
+    lng: 35.820,
+    phone: "0794444444",
+    hours: "8 AM - 8 PM",
+    specialty: "Landscape & Plants",
+    maps: "https://maps.google.com/?q=31.995,35.820"
+  },
+
+  {
+    name: "Blossoms Jo",
+    city: "Amman",
+    region: "Abdoun",
+    lat: 31.940,
+    lng: 35.880,
+    phone: "0793333333",
+    hours: "9 AM - 9 PM",
+    specialty: "Flowers & Plants",
+    maps: "https://maps.google.com/?q=31.940,35.880"
+  },
+
+  {
+    name: "Lahomejo",
+    city: "Amman",
+    region: "Gardens Street",
+    lat: 32.010,
+    lng: 35.870,
+    phone: "0792222222",
+    hours: "9 AM - 8 PM",
+    specialty: "Indoor & Outdoor Plants",
+    maps: "https://maps.google.com/?q=32.010,35.870"
+  },
+
+  {
+    name: "Karak Agricultural Nursery",
+    city: "Karak",
+    region: "Downtown Karak",
+    lat: 31.185,
+    lng: 35.704,
+    phone: "0770223344",
+    hours: "7 AM - 6 PM",
+    specialty: "Olive & Grape Trees",
+    maps: "https://maps.google.com/?q=31.185,35.704"
+  },
+
+  {
+    name: "Al Mazar Green Nursery",
+    city: "Karak",
+    region: "Al Mazar",
+    lat: 31.120,
+    lng: 35.700,
+    phone: "0798881122",
+    hours: "8 AM - 7 PM",
+    specialty: "Seasonal Plants & Trees",
+    maps: "https://maps.google.com/?q=31.120,35.700"
+  },
+
+  {
+    name: "Aqaba Garden Nursery",
+    city: "Aqaba",
+    region: "City Center",
+    lat: 29.532,
+    lng: 35.006,
+    phone: "0796543210",
+    hours: "8 AM - 9 PM",
+    specialty: "Palm Trees & Decorative Plants",
+    maps: "https://maps.google.com/?q=29.532,35.006"
+  },
+
+  {
+    name: "Red Sea Nursery",
+    city: "Aqaba",
+    region: "Al Hafayer",
+    lat: 29.540,
+    lng: 35.010,
+    phone: "0787654321",
+    hours: "8 AM - 8 PM",
+    specialty: "Outdoor Plants & Landscaping",
+    maps: "https://maps.google.com/?q=29.540,35.010"
+  },
+
+  {
+    name: "Al Derbani Nurseries",
+    city: "Jerash",
+    region: "Amman Street",
+    lat: 32.280,
+    lng: 35.899,
+    phone: "0795519115",
+    hours: "8 AM - 7 PM",
+    specialty: "Trees & Decorative Plants",
+    maps: "https://maps.google.com/?q=32.280,35.899"
+  },
+
+  {
+    name: "Jerash Green Nursery",
+    city: "Jerash",
+    region: "Old Jerash",
+    lat: 32.275,
+    lng: 35.901,
+    phone: "0799334455",
+    hours: "7 AM - 7 PM",
+    specialty: "Traditional & Decorative Plants",
+    maps: "https://maps.google.com/?q=32.275,35.901"
+  },
+{
+  name: "Al Shawahed Agricultural Nurseries",
+  city: "Jerash",
+  region: "Unnamed Road",
+  lat: 32.310,
+  lng: 35.910,
+  phone: "0775332266",
+  hours: "7 AM - 8 PM",
+  specialty: "Plant Nursery",
+  maps: "https://maps.google.com/?q=32.310,35.910"
+},
+
+{
+  name: "Al Aseel Agricultural Nurseries",
+  city: "Jerash",
+  region: "Al Sail",
+  lat: 32.320,
+  lng: 35.920,
+  phone: "0775332266",
+  hours: "Open 24 Hours",
+  specialty: "Agricultural Plants",
+  maps: "https://maps.google.com/?q=32.320,35.920"
+},
+
+{
+  name: "Al Qadiri Main Nursery",
+  city: "Jerash",
+  region: "Jerash Center",
+  lat: 32.280,
+  lng: 35.900,
+  phone: "0777772211",
+  hours: "7 AM - 8 PM",
+  specialty: "Flowers & Plants",
+  maps: "https://maps.google.com/?q=32.280,35.900"
+},
+
+{
+  name: "Al Qadiri North Gate Nursery",
+  city: "Jerash",
+  region: "Abu Aqab",
+  lat: 32.295,
+  lng: 35.905,
+  phone: "0777772211",
+  hours: "7 AM - 11:30 PM",
+  specialty: "Wholesale Plant Nursery",
+  maps: "https://maps.google.com/?q=32.295,35.905"
+},
+
+{
+  name: "Al Qadiri Agricultural Nurseries",
+  city: "Jerash",
+  region: "Al Rashaydeh",
+  lat: 32.300,
+  lng: 35.915,
+  phone: "0777300499",
+  hours: "7 AM - 8 PM",
+  specialty: "Plants & Flowers",
+  maps: "https://maps.google.com/?q=32.300,35.915"
+},
+
+{
+  name: "Jerash Heritage Agricultural Nurseries",
+  city: "Jerash",
+  region: "Jerash",
+  lat: 32.285,
+  lng: 35.910,
+  phone: "0772356575",
+  hours: "Open 24 Hours",
+  specialty: "Agricultural Nursery",
+  maps: "https://maps.google.com/?q=32.285,35.910"
+},
+
+{
+  name: "Al Adham Nurseries",
+  city: "Jerash",
+  region: "Jerash Street 35",
+  lat: 32.290,
+  lng: 35.920,
+  phone: "0797292902",
+  hours: "Open 24 Hours",
+  specialty: "Decorative Plants",
+  maps: "https://maps.google.com/?q=32.290,35.920"
+},
+
+{
+  name: "Prince Faisal Plantation",
+  city: "Jerash",
+  region: "Amman Highway",
+  lat: 32.295,
+  lng: 35.890,
+  phone: "0790000000",
+  hours: "8 AM - 3 PM",
+  specialty: "Forest & Outdoor Plants",
+  maps: "https://maps.google.com/?q=32.295,35.890"
+},
+
+{
+  name: "Engineer Zaki Al Yaseen Nursery",
+  city: "Jerash",
+  region: "Irbid-Amman Street",
+  lat: 32.280,
+  lng: 35.895,
+  phone: "0795235030",
+  hours: "Open 24 Hours",
+  specialty: "Plants Wholesale",
+  maps: "https://maps.google.com/?q=32.280,35.895"
+},
+
+{
+  name: "Al Faisal Forest Nursery",
+  city: "Jerash",
+  region: "Jerash North",
+  lat: 32.305,
+  lng: 35.900,
+  phone: "0791111111",
+  hours: "7 AM - 6 PM",
+  specialty: "Forest Trees",
+  maps: "https://maps.google.com/?q=32.305,35.900"
+},
+
+{
+  name: "Makkah Nurseries",
+  city: "Jerash",
+  region: "King Talal Dam Road",
+  lat: 32.315,
+  lng: 35.880,
+  phone: "0777229925",
+  hours: "Open 24 Hours",
+  specialty: "Trees & Plants",
+  maps: "https://maps.google.com/?q=32.315,35.880"
+},
+
+{
+  name: "Al Taqwa & Al Afif Nurseries",
+  city: "Jerash",
+  region: "Near Faisal Nursery",
+  lat: 32.308,
+  lng: 35.905,
+  phone: "0779089088",
+  hours: "7 AM - 5 PM",
+  specialty: "Wholesale Plants",
+  maps: "https://maps.google.com/?q=32.308,35.905"
+},
+
+{
+  name: "Al Zain Nursery",
+  city: "Jerash",
+  region: "Jerash Area",
+  lat: 32.300,
+  lng: 35.918,
+  phone: "0770380040",
+  hours: "Open 24 Hours",
+  specialty: "Garden Plants",
+  maps: "https://maps.google.com/?q=32.300,35.918"
+},
+
+{
+  name: "Amir Nursery",
+  city: "Jerash",
+  region: "Jerash South",
+  lat: 32.275,
+  lng: 35.930,
+  phone: "0798888888",
+  hours: "8 AM - 7 PM",
+  specialty: "Decorative Plants",
+  maps: "https://maps.google.com/?q=32.275,35.930"
+},
+
+{
+  name: "Al Daoud Agricultural Nurseries",
+  city: "Jerash",
+  region: "Jerash West",
+  lat: 32.298,
+  lng: 35.899,
+  phone: "0788141414",
+  hours: "Open 24 Hours",
+  specialty: "Agricultural Trees",
+  maps: "https://maps.google.com/?q=32.298,35.899"
+},{
+  name: "Tanween Nursery",
+  city: "Irbid",
+  region: "At-Taqwa Street",
+  lat: 32.555,
+  lng: 35.850,
+  phone: "0778375711",
+  hours: "9 AM - 7 PM",
+  specialty: "Indoor & Decorative Plants",
+  maps: "https://maps.google.com/?q=32.555,35.850"
+},
+
+{
+  name: "Abu Akir Nursery",
+  city: "Irbid",
+  region: "Makkah Al Mukarramah Street",
+  lat: 32.548,
+  lng: 35.857,
+  phone: "0795488419",
+  hours: "8 AM - 10 PM",
+  specialty: "Plant Nursery",
+  maps: "https://maps.google.com/?q=32.548,35.857"
+},
+
+{
+  name: "Al Wastiyah Nursery",
+  city: "Irbid",
+  region: "Kufranjah - Hofa",
+  lat: 32.430,
+  lng: 35.760,
+  phone: "0777306721",
+  hours: "8 AM - 10 PM",
+  specialty: "Agricultural Trees",
+  maps: "https://maps.google.com/?q=32.430,35.760"
+},
+
+{
+  name: "Al Furat Hydroponic Nursery",
+  city: "Irbid",
+  region: "Martyrs Tiles Street",
+  lat: 32.552,
+  lng: 35.865,
+  phone: "0791075651",
+  hours: "Open 24 Hours",
+  specialty: "Hydroponic Agriculture",
+  maps: "https://maps.google.com/?q=32.552,35.865"
+},
+
+{
+  name: "Al Mumani Nursery",
+  city: "Irbid",
+  region: "Irbid Center",
+  lat: 32.560,
+  lng: 35.848,
+  phone: "0772261236",
+  hours: "7 AM - 2 AM",
+  specialty: "Decorative Plants",
+  maps: "https://maps.google.com/?q=32.560,35.848"
+},
+
+{
+  name: "Al Zahraa Nursery",
+  city: "Irbid",
+  region: "Aydoun Street",
+  lat: 32.535,
+  lng: 35.880,
+  phone: "0797626304",
+  hours: "8 AM - 8 PM",
+  specialty: "Flowers & Plants",
+  maps: "https://maps.google.com/?q=32.535,35.880"
+},
+
+{
+  name: "Shunnag Modern Nurseries",
+  city: "Irbid",
+  region: "Queen Noor Street",
+  lat: 32.550,
+  lng: 35.860,
+  phone: "0798724343",
+  hours: "9 AM - 10 PM",
+  specialty: "Flowers & Decorative Plants",
+  maps: "https://maps.google.com/?q=32.550,35.860"
+},
+
+{
+  name: "Nurseries Deira Jasmine",
+  city: "Irbid",
+  region: "Al-Quds Street",
+  lat: 32.5697758,
+  lng: 35.8448565,
+  phone: "0772192027",
+  hours: "9 AM - 5 PM",
+  specialty: "Garden Plants",
+  maps: "https://maps.google.com/?q=32.5697758,35.8448565"
+},
+
+{
+  name: "Zeina Ornamental Plants Nursery",
+  city: "Irbid",
+  region: "Dherar Street",
+  lat: 32.555,
+  lng: 35.845,
+  phone: "0770723637",
+  hours: "8 AM - 8 PM",
+  specialty: "Cactus & Ornamental Plants",
+  maps: "https://maps.google.com/?q=32.555,35.845"
+},
+
+{
+  name: "Online Nurseries",
+  city: "Irbid",
+  region: "Near Al Huda Mosque",
+  lat: 32.561,
+  lng: 35.853,
+  phone: "0798126590",
+  hours: "Open 24 Hours",
+  specialty: "Online Plant Orders",
+  maps: "https://maps.google.com/?q=32.561,35.853"
+},
+
+{
+  name: "Yarmouk Fruit Tree Nurseries",
+  city: "Irbid",
+  region: "Kharja - Bani Kinana",
+  lat: 32.680,
+  lng: 35.760,
+  phone: "0777721982",
+  hours: "Open 24 Hours",
+  specialty: "Fruit Trees",
+  maps: "https://maps.google.com/?q=32.680,35.760"
+},
+
+{
+  name: "Plant Hut",
+  city: "Irbid",
+  region: "Ahmad Al Jazzar Street",
+  lat: 32.548,
+  lng: 35.872,
+  phone: "0797047407",
+  hours: "9 AM - 11:30 PM",
+  specialty: "Indoor Plants",
+  maps: "https://maps.google.com/?q=32.548,35.872"
+},
+
+{
+  name: "Hawd Ward Gallery",
+  city: "Irbid",
+  region: "Prince Hassan Street",
+  lat: 32.551,
+  lng: 35.861,
+  phone: "0790000000",
+  hours: "8 AM - 8 PM",
+  specialty: "Wholesale Plants",
+  maps: "https://maps.google.com/?q=32.551,35.861"
+},
+{
+  name: "Miss Flora Nursery",
+  city: "Zarqa",
+  region: "Zarqa Center",
+  lat: 32.072,
+  lng: 36.088,
+  phone: "0787048970",
+  hours: "8 AM - 8 PM",
+  specialty: "Decorative Plants & Trees",
+  maps: "https://maps.google.com/?q=32.072,36.088"
+},
+
+{
+  name: "Al Hakam Nursery",
+  city: "Zarqa",
+  region: "Zarqa City",
+  lat: 32.080,
+  lng: 36.090,
+  phone: "0788610251",
+  hours: "8 AM - 5 PM",
+  specialty: "Indoor & Outdoor Plants",
+  maps: "https://maps.google.com/?q=32.080,36.090"
+},
+
+{
+  name: "Nakhlat Wafi Nursery",
+  city: "Zarqa",
+  region: "Abdullah Al Fayad Street",
+  lat: 32.068,
+  lng: 36.100,
+  phone: "0796970705",
+  hours: "Open 24 Hours",
+  specialty: "Palm Trees & Garden Plants",
+  maps: "https://maps.google.com/?q=32.068,36.100"
+},
+
+{
+  name: "Baghdad Palm Nursery",
+  city: "Zarqa",
+  region: "Zarqa Industrial Area",
+  lat: 32.085,
+  lng: 36.110,
+  phone: "0787235800",
+  hours: "Open 24 Hours",
+  specialty: "Palm Trees",
+  maps: "https://maps.google.com/?q=32.085,36.110"
+},
+
+{
+  name: "Al Ez Nursery",
+  city: "Zarqa",
+  region: "Al Quds Street",
+  lat: 32.073,
+  lng: 36.095,
+  phone: "0791363370",
+  hours: "8 AM - 8 PM",
+  specialty: "Garden Plants",
+  maps: "https://maps.google.com/?q=32.073,36.095"
+},
+
+{
+  name: "Jamzou Nursery",
+  city: "Zarqa",
+  region: "Downtown Zarqa",
+  lat: 32.071,
+  lng: 36.089,
+  phone: "0790000000",
+  hours: "8 AM - 7 PM",
+  specialty: "Flowers & Decorative Plants",
+  maps: "https://maps.google.com/?q=32.071,36.089"
+},
+
+{
+  name: "Al Mokhtar Flowers & Trees",
+  city: "Zarqa",
+  region: "Mecca Street",
+  lat: 32.077,
+  lng: 36.093,
+  phone: "0791165628",
+  hours: "9 AM - 9 PM",
+  specialty: "Flowers & Trees",
+  maps: "https://maps.google.com/?q=32.077,36.093"
+},
+
+{
+  name: "Nabta & Farha Nursery",
+  city: "Zarqa",
+  region: "Zarqa",
+  lat: 32.074,
+  lng: 36.091,
+  phone: "0780267870",
+  hours: "Open 24 Hours",
+  specialty: "Indoor Plants",
+  maps: "https://maps.google.com/?q=32.074,36.091"
+},
+
+{
+  name: "Al Fajr Agricultural Nursery",
+  city: "Zarqa",
+  region: "Jerash Road",
+  lat: 32.120,
+  lng: 35.980,
+  phone: "0777510909",
+  hours: "7 AM - 8 PM",
+  specialty: "Agricultural Trees",
+  maps: "https://maps.google.com/?q=32.120,35.980"
+},
+
+{
+  name: "Doctor Al Ward Flowers",
+  city: "Zarqa",
+  region: "Zarqa Downtown",
+  lat: 32.070,
+  lng: 36.085,
+  phone: "0798277399",
+  hours: "9 AM - 8 PM",
+  specialty: "Flowers & Plants",
+  maps: "https://maps.google.com/?q=32.070,36.085"
+},
+
+{
+  name: "Ali Al Naami Nursery",
+  city: "Russeifa",
+  region: "Russeifa",
+  lat: 32.025,
+  lng: 36.046,
+  phone: "0788321019",
+  hours: "Open Until Midnight",
+  specialty: "Nursery & Garden Supplies",
+  maps: "https://maps.google.com/?q=32.025,36.046"
+},
+
+{
+  name: "Sidrat Al Muntaha Farms",
+  city: "Azraq",
+  region: "North Azraq",
+  lat: 31.880,
+  lng: 36.830,
+  phone: "0775582094",
+  hours: "6 AM - 5 PM",
+  specialty: "Agricultural Nursery",
+  maps: "https://maps.google.com/?q=31.880,36.830"
+},
+{
+  name: "Nursery Zahran",
+  city: "Balqa",
+  region: "Ein Al-Basha",
+  lat: 32.050,
+  lng: 35.830,
+  phone: "0796601434",
+  hours: "8 AM - 6 PM",
+  specialty: "Wholesale Plant Nursery",
+  maps: "https://maps.google.com/?q=32.050,35.830"
+},
+
+{
+  name: "Elegant Garden Nursery",
+  city: "Balqa",
+  region: "Safout",
+  lat: 32.040,
+  lng: 35.760,
+  phone: "0785877529",
+  hours: "8:30 AM - 8 PM",
+  specialty: "Decorative Plants & Trees",
+  maps: "https://maps.google.com/?q=32.040,35.760"
+},
+
+{
+  name: "Al Aseel Agricultural Nurseries",
+  city: "Balqa",
+  region: "Ein Al-Basha",
+  lat: 32.060,
+  lng: 35.820,
+  phone: "0775332266",
+  hours: "7 AM - 7 PM",
+  specialty: "Agricultural Plants",
+  maps: "https://maps.google.com/?q=32.060,35.820"
+},
+
+{
+  name: "Al Waha Nurseries",
+  city: "Balqa",
+  region: "Ein Al-Basha Road",
+  lat: 32.055,
+  lng: 35.825,
+  phone: "0790001111",
+  hours: "Open 24 Hours",
+  specialty: "Garden Plants",
+  maps: "https://maps.google.com/?q=32.055,35.825"
+},
+
+{
+  name: "Al Shami Nursery",
+  city: "Balqa",
+  region: "Ein Al-Basha",
+  lat: 32.058,
+  lng: 35.828,
+  phone: "0792223344",
+  hours: "8 AM - 7 PM",
+  specialty: "Fruit Trees & Decorative Plants",
+  maps: "https://maps.google.com/?q=32.058,35.828"
+},
+
+{
+  name: "Rubu' As-Salt Exhibition and Nursery",
+  city: "Balqa",
+  region: "As-Salt",
+  lat: 32.040,
+  lng: 35.730,
+  phone: "0777229930",
+  hours: "8 AM - 8 PM",
+  specialty: "Decorative Plants",
+  maps: "https://maps.google.com/?q=32.040,35.730"
+},
+
+{
+  name: "Modern Art Nursery",
+  city: "Balqa",
+  region: "Southern Shouneh",
+  lat: 31.900,
+  lng: 35.600,
+  phone: "053581188",
+  hours: "7 AM - 8 PM",
+  specialty: "Plants & Landscaping",
+  maps: "https://maps.google.com/?q=31.900,35.600"
+},
+
+{
+  name: "Ain Al-Basha Nursery",
+  city: "Balqa",
+  region: "Al Hanou",
+  lat: 32.052,
+  lng: 35.827,
+  phone: "0786464960",
+  hours: "7 AM - 6 PM",
+  specialty: "Nursery & Garden Supplies",
+  maps: "https://maps.google.com/?q=32.052,35.827"
+},
+
+{
+  name: "Alma and Ayla Nursery",
+  city: "Balqa",
+  region: "Safout",
+  lat: 32.035,
+  lng: 35.770,
+  phone: "0798683815",
+  hours: "7 AM - 5 PM",
+  specialty: "Indoor & Outdoor Plants",
+  maps: "https://maps.google.com/?q=32.035,35.770"
+},
+
+{
+  name: "Al Rabee Nurseries",
+  city: "Balqa",
+  region: "Wadi Al Huwairat",
+  lat: 31.980,
+  lng: 35.700,
+  phone: "0798887777",
+  hours: "8 AM - 6 PM",
+  specialty: "Wholesale Plants",
+  maps: "https://maps.google.com/?q=31.980,35.700"
+},
+];
+
+
+
+
+
+
+    let activeFilter = 'all';
+    let userLat = null;
+    let userLng = null;
+
+    function dist(lat1, lng1, lat2, lng2) {
+
+      const R = 6371;
+
+      const dLat =
+        (lat2 - lat1) * Math.PI / 180;
+
+      const dLng =
+        (lng2 - lng1) * Math.PI / 180;
+
+      const a =
+        Math.sin(dLat / 2) *
+        Math.sin(dLat / 2) +
+
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+
+      return R * 2 *
+        Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function setFilter(f, btn) {
+
+      activeFilter = f;
+
+      document.querySelectorAll('.filter-btn')
+        .forEach(b => b.classList.remove('active'));
+
+      btn.classList.add('active');
+
+      filterNurseries();
+    }
+
+    function filterNurseries() {
+
+      const q =
+        document.getElementById('searchInput')
+        .value
+        .trim()
+        .toLowerCase();
+
+      let list = nurseries.filter(n => {
+
+        const matchFilter =
+          activeFilter === 'all' ||
+          n.city === activeFilter;
+
+        const matchSearch =
+          !q ||
+          n.name.toLowerCase().includes(q) ||
+          n.region.toLowerCase().includes(q) ||
+          n.city.toLowerCase().includes(q) ||
+          n.specialty.toLowerCase().includes(q);
+
+        return matchFilter && matchSearch;
+      });
+
+      if (userLat !== null) {
+
+        list = list.map(n => ({
+          ...n,
+          distance: dist(userLat, userLng, n.lat, n.lng)
+        }));
+
+        list.sort((a, b) => a.distance - b.distance);
+      }
+
+      renderCards(list);
+    }
+
+    function renderCards(list) {
+
+      const grid =
+        document.getElementById('resultsGrid');
+
+      if (!list.length) {
+
+        grid.innerHTML = `
+          <div class="empty">
+            <i class="ti ti-search"
+               style="font-size:32px;
+               display:block;
+               margin-bottom:8px"></i>
+
+            No matching results found
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML = list.map((n, i) => {
+
+        const hasDistance =
+          n.distance !== undefined;
+
+        const isNearest =
+          hasDistance && i === 0;
+
+        const distText =
+          hasDistance
+          ? (Math.round(n.distance * 10) / 10) + ' km'
+          : '';
+
+        const badgeClass =
+          hasDistance && n.distance > 30
+          ? 'far'
+          : '';
+
+        return `
+          <div class="nursery-card ${isNearest ? 'nearest' : ''}">
+
+            <div class="card-header">
+
+              <div class="card-name">
+                ${isNearest ? '🌿 ' : ''}
+                ${n.name}
+              </div>
+
+              ${hasDistance
+                ? `<span class="card-badge ${badgeClass}">
+                     ${distText}
+                   </span>`
+                : `<span class="card-badge">
+                     ${n.city}
+                   </span>`
+              }
+
+            </div>
+
+            <div class="card-meta">
+
+              <span>
+                <i class="ti ti-map-pin"
+                  style="font-size:14px"></i>
+
+                ${n.region}, ${n.city}
+              </span>
+
+              <span>
+                <i class="ti ti-clock"
+                  style="font-size:14px"></i>
+
+                ${n.hours}
+              </span>
+
+              <span>
+                <i class="ti ti-leaf"
+                  style="font-size:14px"></i>
+
+                ${n.specialty}
+              </span>
+
+              <span>
+                <i class="ti ti-phone"
+                  style="font-size:14px"></i>
+
+                ${n.phone}
+              </span>
+
+            </div>
+
+            <div class="card-actions">
+
+              <a href="${n.maps}"
+                 target="_blank"
+                 class="primary">
+
+                <i class="ti ti-map"></i>
+                Map
+              </a>
+
+              <a href="tel:${n.phone}">
+                <i class="ti ti-phone"></i>
+                Call
+              </a>
+
+              <a href="https://wa.me/962${n.phone.substring(1)}"
+                 target="_blank">
+
+                <i class="ti ti-brand-whatsapp"></i>
+                WhatsApp
+              </a>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function findNearest() {
+
+      const dot =
+        document.getElementById('statusDot');
+
+      const txt =
+        document.getElementById('statusText');
+
+      dot.className = 'status-dot loading';
+
+      txt.textContent = 'Locating your position...';
+
+      if (!navigator.geolocation) {
+
+        dot.className = 'status-dot error';
+
+        txt.textContent =
+          'Your browser does not support geolocation.';
+
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(pos => {
+
+        userLat = pos.coords.latitude;
+        userLng = pos.coords.longitude;
+
+        const nearest = nurseries
+          .map(n => ({
+            ...n,
+            distance: dist(
+              userLat,
+              userLng,
+              n.lat,
+              n.lng
+            )
+          }))
+
+          .sort((a, b) => a.distance - b.distance)[0];
+
+        dot.className = 'status-dot';
+
+        txt.textContent =
+          `Location detected — Nearest nursery: ${nearest.name}
+           (${Math.round(nearest.distance * 10) / 10} km)`;
+
+        filterNurseries();
+
+      }, () => {
+
+        dot.className = 'status-dot error';
+
+        txt.textContent =
+          'Unable to detect your location. Please allow location access.';
+      });
+    }
+
+    renderCards(nurseries);
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Watering Schedules - MyPlant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: #f8faf8;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            color: #2c5530;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .schedule-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e8f0e8;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .schedule-card:hover {
+            box-shadow: 0 6px 25px rgba(76, 175, 80, 0.12);
+        }
+
+        .schedule-plant-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 12px;
+        }
+
+        .schedule-detail-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .schedule-detail-row i {
+            color: #2e7d32;
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .schedule-detail-label {
+            color: #888;
+            min-width: 80px;
+        }
+
+        .schedule-detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .schedule-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #c8e6c9;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h5 {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        .toast-container-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1060;
+        }
+
+        .toast-custom {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-prompt i {
+            font-size: 48px;
+            color: #4CAF50;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .login-prompt h5 {
+            color: #333;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-success" href="index.html"> MyPlant <i class="bi bi-leaf-fill text-success"></i></a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html" data-translate="nav-home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="plantAi.html" data-translate="plant-id-title">Plant Identification</a></li>
+                    <li class="nav-item ms-3">
+                        <span class="nav-link" data-lang-toggle style="cursor: pointer;">
+                            <i class="bi bi-globe"></i> AR | EN
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <div class="page-container">
+        <h2 class="page-title"><i class="bi bi-droplet-half"></i> <span data-translate="watering-schedules">Watering Schedules</span></h2>
+        <div id="schedulesList"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', loadSchedules);
+
+        async function loadSchedules() {
+            const container = document.getElementById('schedulesList');
+
+            try {
+                const resp = await fetch('http://localhost:3000/api/watering-schedules', {
+                    credentials: 'include'
+                });
+
+                if (resp.status === 401) {
+                    container.innerHTML = `
+                        <div class="login-prompt">
+                            <i class="bi bi-person-circle"></i>
+                            <h5 data-translate="login-for-schedules">Please login to view your watering schedules</h5>
+                            <a href="login.html" class="btn btn-custom btn-primary-custom">
+                                <i class="bi bi-box-arrow-in-right"></i> <span data-translate="login-btn">Login</span>
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const data = await resp.json();
+                displaySchedules(data.schedules || []);
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="bi bi-exclamation-circle"></i><h5 data-translate="error-loading">Error loading schedules</h5></div>`;
+            }
+        }
+
+        function displaySchedules(schedules) {
+            const container = document.getElementById('schedulesList');
+
+            if (!schedules || schedules.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-droplet"></i>
+                        <h5 data-translate="no-schedules">No watering schedules yet</h5>
+                        <p data-translate="no-schedules-desc">Identify a plant and create a watering schedule from the plant identification page.</p>
+                        <a href="plantAi.html" class="btn btn-custom btn-primary-custom">
+                            <i class="bi bi-camera"></i> <span data-translate="identify-plant">Identify a Plant</span>
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = schedules.map(s => `
+                <div class="schedule-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="schedule-plant-name">
+                            <i class="bi bi-flower1" style="color:#2e7d32;"></i> ${escapeHtml(s.plant_name)}
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSchedule(${s.id})" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="schedule-detail-row">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <span class="schedule-detail-label" data-translate="frequency">Frequency</span>
+                        <span class="schedule-detail-value">${escapeHtml(s.frequency || '-')}</span>
+                    </div>
+                    <div class="schedule-detail-row">
+                        <i class="bi bi-cup-straw"></i>
+                        <span class="schedule-detail-label" data-translate="amount">Amount</span>
+                        <span class="schedule-detail-value">${escapeHtml(s.amount || '-')}</span>
+                    </div>
+                    <div class="schedule-detail-row">
+                        <i class="bi bi-clock"></i>
+                        <span class="schedule-detail-label" data-translate="best-time">Best Time</span>
+                        <span class="schedule-detail-value">${escapeHtml(s.best_time || '-')}</span>
+                    </div>
+                    ${s.notes ? `
+                    <div class="schedule-detail-row">
+                        <i class="bi bi-lightbulb"></i>
+                        <span class="schedule-detail-label" data-translate="notes">Notes</span>
+                        <span class="schedule-detail-value">${escapeHtml(s.notes)}</span>
+                    </div>` : ''}
+                    <div class="schedule-date">
+                        <i class="bi bi-calendar3"></i> ${formatDate(s.created_at)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteSchedule(id) {
+            if (!confirm('Delete this watering schedule?')) return;
+            try {
+                const resp = await fetch(`http://localhost:3000/api/watering-schedule/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                if (resp.ok) {
+                    showToast('Schedule deleted', 'success');
+                    loadSchedules();
+                } else {
+                    showToast('Delete failed', 'danger');
+                }
+            } catch (e) {
+                showToast('Delete failed', 'danger');
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            const colors = { success: '#2e7d32', danger: '#c62828', warning: '#f9a825', info: '#1565c0' };
+            const icons = { success: 'bi-check-circle-fill', danger: 'bi-x-circle-fill', warning: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill' };
+            const toast = document.createElement('div');
+            toast.className = 'toast-custom';
+            toast.style.borderLeft = `4px solid ${colors[type] || colors.info}`;
+            toast.innerHTML = `<i class="bi ${icons[type] || icons.info}" style="color:${colors[type] || colors.info}"></i> ${escapeHtml(message)}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>

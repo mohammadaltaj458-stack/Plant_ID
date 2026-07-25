@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - MyPlant</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #edf7ef, #ffffff);
+            color: #1f2d1f;
+        }
+        .navbar {
+            background: #ffffff;
+            padding: 16px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 18px rgba(0,0,0,0.08);
+        }
+        .brand { color: #198754; font-weight: 800; font-size: 22px; text-decoration: none; }
+        .nav-links a { color: #245b2a; text-decoration: none; margin-left: 18px; font-weight: 600; }
+        .container { max-width: 980px; margin: 42px auto; padding: 0 20px; }
+        .hero { text-align: center; margin-bottom: 26px; }
+        .hero h1 { color: #167a2d; margin-bottom: 10px; }
+        .hero p { color: #5d6b5f; line-height: 1.7; }
+        .card {
+            background: #fff;
+            border-radius: 22px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(17, 91, 42, 0.12);
+            border: 1px solid #e5efe6;
+        }
+        .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+        .type-option input { display: none; }
+        .type-option span {
+            display: block;
+            padding: 18px;
+            border-radius: 16px;
+            border: 2px solid #dcebdc;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            background: #f8fbf8;
+        }
+        .type-option input:checked + span { border-color: #198754; background: #e8f6ed; color: #116d32; }
+        label { display: block; font-weight: 700; margin: 16px 0 8px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cfdccf;
+            border-radius: 12px;
+            font-size: 15px;
+            outline-color: #198754;
+            background: #fff;
+        }
+        textarea { min-height: 140px; resize: vertical; }
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: 0;
+            border-radius: 14px;
+            background: #198754;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { background: #126b40; }
+        .message { margin-top: 16px; padding: 14px; border-radius: 12px; display: none; font-weight: 700; }
+        .success { background: #e7f7ec; color: #126b40; border: 1px solid #bfe7cb; }
+        .error { background: #fff1f1; color: #b42318; border: 1px solid #ffcece; }
+        .hint { color: #6b756d; font-size: 14px; margin-top: 8px; }
+        .history-section { margin-top: 40px; }
+        .history-section h2 { color: #167a2d; margin-bottom: 6px; }
+        .history-section .subtitle { color: #637166; margin-bottom: 20px; }
+        .history-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .history-table th, .history-table td { padding: 14px; text-align: left; border-bottom: 1px solid #eef3ef; }
+        .history-table th { background: #e8f6ed; color: #115f2b; font-size: 13px; text-transform: uppercase; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+        .status-new { background: #edf7ed; color: #146c2e; }
+        .status-progress { background: #fff8df; color: #8a6300; }
+        .status-resolved { background: #e6f2ff; color: #1a5c94; }
+        .login-prompt { background: #fff; border-radius: 18px; padding: 28px; text-align: center; color: #68746a; margin-top: 20px; }
+        .login-prompt a { color: #198754; font-weight: 700; text-decoration: none; }
+        @media (max-width: 650px) { .type-toggle { grid-template-columns: 1fr; } .navbar { flex-direction: column; gap: 12px; } .history-table { font-size: 13px; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="brand">MyPlant 🌿</a>
+        <div class="nav-links">
+            <a href="index.html" data-translate="nav-home">Home</a>
+            <a href="javascript:void(0)" data-lang-toggle style="cursor: pointer;">🌐 AR | EN</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 data-translate="feedback-center">Feedback Center</h1>
+            <p data-translate="feedback-subtitle">Share a complaint if something is not working, or send a suggestion to help improve MyPlant.</p>
+        </section>
+
+        <section class="card">
+            <form id="feedbackForm">
+                <div class="type-toggle">
+                    <label class="type-option">
+                        <input type="radio" name="feedbackType" value="Complaint" checked>
+                        <span data-translate="complaint">Complaint</span>
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="feedbackType" value="Suggestion">
+                        <span data-translate="suggestion">Suggestion</span>
+                    </label>
+                </div>
+
+                <div id="complaintCategoryBox">
+                    <label for="complaintCategory" data-translate="complaint-category">Complaint Category</label>
+                    <select id="complaintCategory" name="complaintCategory">
+                        <option value="Website is slow">Website is slow</option>
+                        <option value="Button is not working">Button is not working</option>
+                        <option value="Wrong information">Wrong information</option>
+                        <option value="Reminder issue">Reminder issue</option>
+                        <option value="Plant Identification issue">Plant Identification issue</option>
+                        <option value="Another">Another</option>
+                    </select>
+                    <div class="hint">Choose the closest reason so the admin can classify the issue correctly.</div>
+                </div>
+
+                <label for="title" data-translate="title-label">Title</label>
+                <input id="title" name="title" maxlength="150" placeholder="Example: Plant Identification button does not work" required>
+
+                <label for="message" data-translate="details-label">Details</label>
+                <textarea id="message" name="message" placeholder="Write your complaint or suggestion here..." required></textarea>
+
+                <button type="submit" data-translate="submit">Submit Feedback</button>
+                <div id="responseMessage" class="message"></div>
+            </form>
+        </section>
+
+        <section class="history-section" id="historySection">
+            <h2 data-translate="my-feedback-title">My Feedback History</h2>
+            <p class="subtitle" data-translate="my-feedback-subtitle">Track the status of your submitted complaints and suggestions.</p>
+            <div id="historyContent"></div>
+        </section>
+    </main>
+
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+
+    <script>
+        const form = document.getElementById('feedbackForm');
+        const typeInputs = document.querySelectorAll('input[name="feedbackType"]');
+        const categoryBox = document.getElementById('complaintCategoryBox');
+        const responseMessage = document.getElementById('responseMessage');
+        const historyContent = document.getElementById('historyContent');
+
+        function updateCategoryVisibility() {
+            const selectedType = document.querySelector('input[name="feedbackType"]:checked').value;
+            categoryBox.style.display = selectedType === 'Complaint' ? 'block' : 'none';
+        }
+
+        typeInputs.forEach(input => input.addEventListener('change', updateCategoryVisibility));
+        updateCategoryVisibility();
+
+        function showMessage(text, isSuccess) {
+            responseMessage.textContent = text;
+            responseMessage.className = `message ${isSuccess ? 'success' : 'error'}`;
+            responseMessage.style.display = 'block';
+        }
+
+        function statusBadgeClass(status) {
+            if (status === 'In Progress') return 'status-progress';
+            if (status === 'Resolved') return 'status-resolved';
+            return 'status-new';
+        }
+
+        function renderHistory(feedbacks) {
+            if (feedbacks.length === 0) {
+                historyContent.innerHTML = '<div class="login-prompt" data-translate="no-feedback-history">No feedback submitted yet.</div>';
+                return;
+            }
+
+            let html = '<table class="history-table"><thead><tr>';
+            html += '<th data-translate="col-type">Type</th>';
+            html += '<th data-translate="title-label">Title</th>';
+            html += '<th data-translate="col-status">Status</th>';
+            html += '<th data-translate="col-created">Date</th>';
+            html += '</tr></thead><tbody>';
+
+            feedbacks.forEach(item => {
+                const typeClass = item.feedback_type === 'Complaint' ? 'complaint' : 'suggestion';
+                html += `<tr>
+                    <td><span class="badge ${typeClass}">${item.feedback_type}</span></td>
+                    <td><strong>${item.title}</strong><br><small style="color:#6b756d;">${item.message.substring(0, 100)}${item.message.length > 100 ? '...' : ''}</small></td>
+                    <td><span class="status-badge ${statusBadgeClass(item.status)}">${item.status}</span></td>
+                    <td>${new Date(item.created_at).toLocaleString()}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            historyContent.innerHTML = html;
+        }
+
+        async function loadMyFeedback() {
+            try {
+                const response = await fetch('/api/user/feedback', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    renderHistory(data.feedbacks || []);
+                } else {
+                    historyContent.innerHTML = '<div class="login-prompt"><a href="login.html" data-translate="login-for-history">Login to view your feedback history</a></div>';
+                }
+            } catch (error) {
+                historyContent.innerHTML = '<div class="login-prompt" data-translate="error-loading">Unable to load feedback history.</div>';
+            }
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const feedbackType = document.querySelector('input[name="feedbackType"]:checked').value;
+            const payload = {
+                feedbackType,
+                complaintCategory: feedbackType === 'Complaint' ? document.getElementById('complaintCategory').value : null,
+                title: document.getElementById('title').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showMessage(data.message || 'Unable to submit feedback', false);
+                    return;
+                }
+
+                showMessage(`${data.message}. Tracking status: ${data.status}`, true);
+                form.reset();
+                updateCategoryVisibility();
+                loadMyFeedback();
+            } catch (error) {
+                showMessage('Connection error. Please try again later.', false);
+            }
+        });
+
+        loadMyFeedback();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Plant Identification - MyPlant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background: #f8faf8;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .upload-zone {
+            border: 2px dashed #4CAF50;
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: #2e7d32;
+            background: #f0f9f0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.15);
+        }
+
+        .upload-zone.has-image {
+            padding: 20px;
+            border-style: solid;
+        }
+
+        .upload-zone i.bi-cloud-arrow-up {
+            font-size: 48px;
+            color: #4CAF50;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .upload-zone p {
+            color: #666;
+            margin: 0;
+        }
+
+        .upload-zone input[type="file"] {
+            display: none;
+        }
+
+        #previewContainer {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        #preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+
+        .btn-remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-remove-image:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-group-custom {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-custom {
+            padding: 10px 24px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            color: white;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-danger-custom {
+            background: linear-gradient(45deg, #e53935, #c62828);
+            color: white;
+        }
+
+        .btn-danger-custom:hover {
+            color: white;
+            box-shadow: 0 6px 20px rgba(229, 57, 53, 0.4);
+        }
+
+        .btn-outline-custom {
+            background: white;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .btn-outline-custom:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        video {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            margin: 0 auto;
+        }
+
+        .spinner-overlay {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner-overlay.active {
+            display: block;
+        }
+
+        .spinner-border.text-success {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            margin-top: 6px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4CAF50, #2e7d32);
+            transition: width 0.5s ease;
+        }
+
+        .suggestion-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8f0e8;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-card:hover {
+            box-shadow: 0 6px 25px rgba(76, 175, 80, 0.12);
+            border-color: #4CAF50;
+        }
+
+        .suggestion-card.selected {
+            border-color: #2e7d32;
+            background: #f5fcf5;
+        }
+
+        .suggestion-name {
+            font-size: 17px;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .suggestion-scientific {
+            font-size: 13px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .suggestion-confidence {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        #result {
+            display: none;
+        }
+
+        #result.active {
+            display: block;
+        }
+
+        .plant-detail-section {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .plant-detail-section.active {
+            display: block;
+        }
+
+        .plant-detail-section h4 {
+            color: #2c5530;
+            font-weight: bold;
+            border-bottom: 2px solid #e8f0e8;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .care-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .care-card {
+            background: #f5fcf5;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #d8edd8;
+            text-align: center;
+        }
+
+        .care-card i {
+            font-size: 28px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .care-card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .care-card-value {
+            font-size: 14px;
+            color: #2c5530;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .care-tip {
+            background: #fff8e1;
+            border-radius: 14px;
+            padding: 14px 18px;
+            border: 1px solid #ffecb3;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #795548;
+        }
+
+        .care-tip i {
+            font-size: 20px;
+            color: #f9a825;
+        }
+
+        .schedule-offer {
+            background: #e3f2fd;
+            border-radius: 14px;
+            padding: 16px 20px;
+            border: 1px solid #bbdefb;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .schedule-offer h5 {
+            color: #1565c0;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .schedule-offer p {
+            color: #444;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .schedule-offer .btn-sm {
+            margin: 0 6px;
+        }
+
+        .schedule-result {
+            background: #e8f5e9;
+            border-radius: 14px;
+            padding: 16px 20px;
+            border: 1px solid #c8e6c9;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .schedule-result.active {
+            display: block;
+        }
+
+        .schedule-result h5 {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .schedule-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e8f5e9;
+            font-size: 14px;
+        }
+
+        .schedule-detail:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-detail-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .schedule-detail-value {
+            color: #2c5530;
+            font-weight: 600;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 12px;
+        }
+
+        .detail-value {
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .common-names-tag {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin: 3px 4px 3px 0;
+        }
+
+        .history-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .history-title {
+            color: #2c5530;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .plant-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 0.3);
+        }
+
+        .plant-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+        }
+
+        .plant-card-info {
+            padding: 15px;
+        }
+
+        .plant-card-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 8px;
+        }
+
+        .plant-card-confidence {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .plant-card-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #999;
+            font-size: 18px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1050;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content-custom {
+            background: white;
+            border-radius: 24px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+
+        .toast-container-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1060;
+        }
+
+        .toast-custom {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 576px) {
+            .upload-zone { padding: 30px 15px; }
+            .history-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-success" href="index.html"> MyPlant <i class="bi bi-leaf-fill text-success"></i></a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html" data-translate="nav-home">Home</a></li>
+                    <li class="nav-item ms-3">
+                        <span class="nav-link" data-lang-toggle style="cursor: pointer;">
+                            <i class="bi bi-globe"></i> AR | EN
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <div class="history-section">
+        <h2 class="history-title" data-translate="history-title">Plant History</h2>
+        <div id="historyContainer" class="history-grid"></div>
+    </div>
+
+    <div class="main-content">
+        <h2 class="text-center mb-4" style="color:#2c5530;" data-translate="ai-title">Upload or capture a plant image for analysis</h2>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="uploadZone">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <p data-translate="drop-hint">Drop an image here or click to browse</p>
+            <input type="file" id="imageInput" accept="image/*">
+            <div id="previewContainer">
+                <img id="preview">
+                <button class="btn-remove-image" id="btnRemoveImage" onclick="removeImage()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="btn-group-custom">
+            <button class="btn btn-custom btn-outline-custom" onclick="document.getElementById('imageInput').click()">
+                <i class="bi bi-folder2-open"></i> <span data-translate="choose-file">Choose File</span>
+            </button>
+            <button class="btn btn-custom btn-primary-custom" id="btnStartCamera" onclick="startCamera()">
+                <i class="bi bi-camera"></i> <span data-translate="start-camera">Start Camera</span>
+            </button>
+            <button class="btn btn-custom btn-primary-custom" id="btnCapture" onclick="captureImage()" style="display:none;">
+                <i class="bi bi-camera-fill"></i> <span data-translate="capture-image">Capture Image</span>
+            </button>
+            <button class="btn btn-custom btn-danger-custom" id="btnStopCamera" onclick="stopCamera()" style="display:none;">
+                <i class="bi bi-stop-circle"></i> <span>Stop Camera</span>
+            </button>
+            <button class="btn btn-custom btn-primary-custom" id="btnIdentify" onclick="identifyPlant()" disabled>
+                <i class="bi bi-search"></i> <span data-translate="identify-btn">Identify Plant</span>
+            </button>
+        </div>
+
+        <video id="camera" autoplay playsinline></video>
+
+        <!-- Spinner -->
+        <div class="spinner-overlay" id="spinner">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted" data-translate="analyzing">Analyzing plant image...</p>
+        </div>
+
+        <!-- Results -->
+        <div id="result">
+            <h4 class="mb-3" style="color:#2c5530; font-weight:bold;">
+                <i class="bi bi-clipboard-data"></i> <span data-translate="identification-results">Identification Results</span>
+            </h4>
+            <div id="suggestionsList"></div>
+        </div>
+
+        <!-- Plant Detail -->
+        <div class="plant-detail-section" id="plantDetail">
+            <h4><i class="bi bi-info-circle"></i> <span data-translate="plant-info">Plant Information</span></h4>
+            <div id="detailContent"></div>
+        </div>
+
+        <div class="plant-detail-section" id="careSection">
+            <h4><i class="bi bi-droplet"></i> <span data-translate="care-guide">Care Guide</span></h4>
+            <div id="careContent"></div>
+            <div class="text-center mt-2">
+                <small class="text-muted" data-translate="powered-by-gemini">Powered by Gemini AI</small>
+            </div>
+        </div>
+
+        <!-- Watering Schedule Offer -->
+        <div class="plant-detail-section" id="scheduleSection">
+            <h4><i class="bi bi-calendar-check"></i> <span data-translate="watering-schedule">Watering Schedule</span></h4>
+            <div class="schedule-offer" id="scheduleOffer">
+                <h5><i class="bi bi-droplet-half"></i> <span data-translate="want-schedule">Want a watering schedule?</span></h5>
+                <p><span data-translate="schedule-offer-desc">Get a personalized watering schedule for this plant generated by AI.</span></p>
+                <button class="btn btn-custom btn-primary-custom btn-sm" onclick="generateSchedule()">
+                    <i class="bi bi-magic"></i> <span data-translate="create-schedule">Create Watering Schedule</span>
+                </button>
+            </div>
+            <div class="schedule-result" id="scheduleResult">
+                <h5><i class="bi bi-check-circle"></i> <span data-translate="suggested-schedule">Suggested Schedule</span></h5>
+                <div id="scheduleDetails"></div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-custom btn-primary-custom btn-sm" onclick="acceptSchedule()">
+                        <i class="bi bi-check-lg"></i> <span data-translate="accept">Accept</span>
+                    </button>
+                    <button class="btn btn-custom btn-outline-custom btn-sm" onclick="declineSchedule()">
+                        <i class="bi bi-x-lg"></i> <span data-translate="decline">Decline</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+
+    <script>
+        let stream = null;
+        let currentImageData = null;
+        let currentSuggestions = [];
+
+        // ── Drag & Drop ──
+        const uploadZone = document.getElementById('uploadZone');
+        const imageInput = document.getElementById('imageInput');
+
+        uploadZone.addEventListener('click', () => imageInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            } else {
+                showToast('Please drop an image file', 'warning');
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFile(file);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showPreview(e.target.result);
+                currentImageData = e.target.result;
+                document.getElementById('btnIdentify').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showPreview(src) {
+            const preview = document.getElementById('preview');
+            preview.src = src;
+            preview.style.display = 'block';
+            document.getElementById('btnRemoveImage').style.display = 'flex';
+            uploadZone.classList.add('has-image');
+            uploadZone.querySelector('i.bi-cloud-arrow-up').style.display = 'none';
+            uploadZone.querySelector('p').style.display = 'none';
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('plantDetail').classList.remove('active');
+            document.getElementById('careSection').classList.remove('active');
+            document.getElementById('scheduleSection').classList.remove('active');
+            currentSuggestions = [];
+        }
+
+        function removeImage() {
+            const preview = document.getElementById('preview');
+            preview.style.display = 'none';
+            preview.src = '';
+            document.getElementById('btnRemoveImage').style.display = 'none';
+            uploadZone.classList.remove('has-image');
+            uploadZone.querySelector('i.bi-cloud-arrow-up').style.display = 'block';
+            uploadZone.querySelector('p').style.display = 'block';
+            imageInput.value = '';
+            currentImageData = null;
+            document.getElementById('btnIdentify').disabled = true;
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('plantDetail').classList.remove('active');
+            document.getElementById('careSection').classList.remove('active');
+            document.getElementById('scheduleSection').classList.remove('active');
+            currentSuggestions = [];
+        }
+
+        function removeImage() {
+            const preview = document.getElementById('preview');
+            preview.style.display = 'none';
+            preview.src = '';
+            document.getElementById('btnRemoveImage').style.display = 'none';
+            uploadZone.classList.remove('has-image');
+            uploadZone.querySelector('i.bi-cloud-arrow-up').style.display = 'block';
+            uploadZone.querySelector('p').style.display = 'block';
+            imageInput.value = '';
+            currentImageData = null;
+            document.getElementById('btnIdentify').disabled = true;
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('plantDetail').classList.remove('active');
+            currentSuggestions = [];
+        }
+
+        // ── Camera ──
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                const video = document.getElementById('camera');
+                video.srcObject = stream;
+                video.style.display = 'block';
+                document.getElementById('btnStartCamera').style.display = 'none';
+                document.getElementById('btnCapture').style.display = '';
+                document.getElementById('btnStopCamera').style.display = '';
+            } catch (err) {
+                showToast('Camera access denied or not available', 'danger');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            document.getElementById('camera').style.display = 'none';
+            document.getElementById('btnStartCamera').style.display = '';
+            document.getElementById('btnCapture').style.display = 'none';
+            document.getElementById('btnStopCamera').style.display = 'none';
+        }
+
+        function captureImage() {
+            const video = document.getElementById('camera');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 800;
+            canvas.height = video.videoHeight || 600;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            stopCamera();
+            showPreview(dataUrl);
+            currentImageData = dataUrl;
+            document.getElementById('btnIdentify').disabled = false;
+        }
+
+        // ── Identify ──
+        async function identifyPlant() {
+            if (!currentImageData) {
+                showToast('Please select an image first', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnIdentify');
+            btn.disabled = true;
+            document.getElementById('spinner').classList.add('active');
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('plantDetail').classList.remove('active');
+            currentSuggestions = [];
+
+            try {
+                const response = await fetch('http://localhost:3000/api/identify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        images: [currentImageData],
+                        similar_images: true
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    let msg = data.message || 'Server error';
+                    if (response.status === 429) msg = 'API quota exceeded. Try again later.';
+                    showToast(msg, 'danger');
+                    return;
+                }
+
+                if (!data.suggestions || data.suggestions.length === 0) {
+                    showToast('No plant recognized', 'warning');
+                    return;
+                }
+
+                // Filter low-confidence results
+                const valid = data.suggestions.filter(s => (s.probability || 0) >= 0.05);
+                if (valid.length === 0) {
+                    showToast('No plant recognized with sufficient confidence', 'warning');
+                    return;
+                }
+
+                currentSuggestions = valid;
+                displaySuggestions(valid);
+                trySavePlant(valid[0]);
+            } catch (error) {
+                showToast('Connection error. Is the backend running?', 'danger');
+            } finally {
+                document.getElementById('spinner').classList.remove('active');
+                btn.disabled = false;
+            }
+        }
+
+        function displaySuggestions(suggestions) {
+            const container = document.getElementById('suggestionsList');
+            const top = suggestions.slice(0, 5);
+
+            container.innerHTML = top.map((s, i) => {
+                const pct = (s.probability * 100).toFixed(1);
+                const name = s.plant_details
+                    ? (s.plant_details.common_names && s.plant_details.common_names[0]
+                        ? s.plant_details.common_names[0]
+                        : s.plant_name)
+                    : s.plant_name;
+                const scientific = s.plant_name;
+                const color = pct >= 70 ? '#2e7d32' : pct >= 40 ? '#f9a825' : '#e65100';
+                return `
+                    <div class="suggestion-card ${i === 0 ? 'selected' : ''}" onclick="selectSuggestion(${i}, ${top.length})">
+                        <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap:wrap; gap:8px;">
+                            <div>
+                                <div class="suggestion-name">${escapeHtml(name)}</div>
+                                <div class="suggestion-scientific">${escapeHtml(scientific)}</div>
+                            </div>
+                            <div class="suggestion-confidence" style="color:${color}">${pct}%</div>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress-bar-fill" style="width:${pct}%; background:${color};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('result').classList.add('active');
+            showPlantInfo(suggestions[0], true);
+        }
+
+        function selectSuggestion(index, total) {
+            document.querySelectorAll('.suggestion-card').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+            if (currentSuggestions[index]) {
+                showPlantInfo(currentSuggestions[index], index === 0);
+            }
+        }
+
+        async function showPlantInfo(suggestion, isTop = false) {
+            const detail = document.getElementById('plantDetail');
+            const content = document.getElementById('detailContent');
+            detail.classList.add('active');
+
+            const pct = (suggestion.probability * 100).toFixed(1);
+            const scientific = suggestion.plant_name;
+            const commonNames = suggestion.plant_details?.common_names || [];
+            const apiDesc = suggestion.plant_details?.description?.value || '';
+            const displayName = commonNames[0] || scientific;
+
+            // Wikipedia fallback
+            let wikiText = '';
+            try {
+                let resp = await fetch(
+                    `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(scientific)}`
+                );
+                if (resp.ok) {
+                    const wiki = await resp.json();
+                    wikiText = wiki.extract || '';
+                } else {
+                    resp = await fetch(
+                        `https://ar.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(scientific)}`
+                    );
+                    if (resp.ok) {
+                        const wiki = await resp.json();
+                        wikiText = wiki.extract || '';
+                    }
+                }
+            } catch (e) {}
+
+            const description = apiDesc || wikiText || 'No description available.';
+
+            content.innerHTML = `
+                <div class="detail-label" data-translate="scientific-name">Scientific Name</div>
+                <div class="detail-value"><em>${escapeHtml(scientific)}</em></div>
+
+                ${commonNames.length ? `
+                <div class="detail-label" data-translate="common-names">Common Names</div>
+                <div class="detail-value">
+                    ${commonNames.map(n => `<span class="common-names-tag">${escapeHtml(n)}</span>`).join('')}
+                </div>
+                ` : ''}
+
+                <div class="detail-label" data-translate="confidence">Confidence</div>
+                <div class="detail-value" style="font-weight:600; color:${pct >= 70 ? '#2e7d32' : pct >= 40 ? '#f9a825' : '#e65100'}">${pct}%</div>
+
+                <div class="detail-label" data-translate="description">Description</div>
+                <div class="detail-value">${escapeHtml(description)}</div>
+            `;
+
+            const careSection = document.getElementById('careSection');
+            const scheduleSection = document.getElementById('scheduleSection');
+
+            if (isTop) {
+                careSection.classList.add('active');
+                fetchPlantCare(displayName);
+            } else {
+                careSection.classList.remove('active');
+                scheduleSection.classList.remove('active');
+            }
+        }
+
+        async function fetchPlantCare(plantName) {
+            const section = document.getElementById('careSection');
+            const content = document.getElementById('careContent');
+
+            section.classList.add('active');
+            content.innerHTML = `<div class="text-center py-3"><div class="spinner-border text-success" role="status"></div><p class="mt-2 text-muted small">Loading care guide...</p></div>`;
+
+            try {
+                const resp = await fetch('http://localhost:3000/api/plant-care', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plantName })
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok || !data.care) {
+                    content.innerHTML = `<p class="text-muted text-center">Care guide unavailable</p>`;
+                    return;
+                }
+
+                const c = data.care;
+                content.innerHTML = `
+                    <div class="care-grid">
+                        <div class="care-card">
+                            <i class="bi bi-tree"></i>
+                            <div class="care-card-label" data-translate="soil">Soil</div>
+                            <div class="care-card-value">${escapeHtml(c.soil || '-')}</div>
+                        </div>
+                        <div class="care-card">
+                            <i class="bi bi-droplet"></i>
+                            <div class="care-card-label" data-translate="watering">Watering</div>
+                            <div class="care-card-value">${escapeHtml(c.watering || '-')}</div>
+                        </div>
+                        <div class="care-card">
+                            <i class="bi bi-sun"></i>
+                            <div class="care-card-label" data-translate="sunlight">Sunlight</div>
+                            <div class="care-card-value">${escapeHtml(c.sunlight || '-')}</div>
+                        </div>
+                        <div class="care-card">
+                            <i class="bi bi-thermometer-half"></i>
+                            <div class="care-card-label" data-translate="temperature">Temperature</div>
+                            <div class="care-card-value">${escapeHtml(c.temperature || '-')}</div>
+                            <a href="weather.html" class="btn btn-sm btn-outline-info mt-2" data-translate="weather-btn">Weather</a>
+                        </div>
+                    </div>
+                    ${c.tips ? `
+                    <div class="care-tip">
+                        <i class="bi bi-lightbulb"></i>
+                        <span>${escapeHtml(c.tips)}</span>
+                    </div>
+                    ` : ''}
+                `;
+
+                // Show watering schedule offer
+                currentPlantNameForSchedule = plantName;
+                document.getElementById('scheduleSection').classList.add('active');
+                document.getElementById('scheduleOffer').style.display = 'block';
+                document.getElementById('scheduleResult').classList.remove('active');
+                currentScheduleData = null;
+            } catch (e) {
+                content.innerHTML = `<p class="text-muted text-center">Care guide unavailable</p>`;
+            }
+        }
+
+        // ── Save to Backend ──
+        async function trySavePlant(suggestion) {
+            const pct = (suggestion.probability * 100).toFixed(1);
+            const name = suggestion.plant_details?.common_names?.[0] || suggestion.plant_name;
+
+            try {
+                const resp = await fetch('http://localhost:3000/api/save-plant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        plantName: name,
+                        probability: pct,
+                        description: suggestion.plant_details?.description?.value || '',
+                        imageData: currentImageData
+                    })
+                });
+
+                if (resp.status === 401) {
+                    showToast('Login to save plant history', 'warning');
+                    return;
+                }
+
+                if (resp.ok) {
+                    showToast('Plant saved to history', 'success');
+                    loadPlantHistory();
+                }
+            } catch (e) {
+                // silent
+            }
+        }
+
+        // ── Plant History ──
+        window.addEventListener('DOMContentLoaded', loadPlantHistory);
+
+        async function loadPlantHistory() {
+            try {
+                const response = await fetch('http://localhost:3000/api/user-plants', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.status === 401) {
+                    document.getElementById('historyContainer').innerHTML =
+                        '<div class="empty-history" data-translate="login-for-history">Login to view plant history</div>';
+                    return;
+                }
+
+                const data = await response.json();
+                displayPlantHistory(data.plants || []);
+            } catch (error) {
+                document.getElementById('historyContainer').innerHTML =
+                    '<div class="empty-history">Error loading history</div>';
+            }
+        }
+
+        function displayPlantHistory(plants) {
+            const container = document.getElementById('historyContainer');
+
+            if (!plants || plants.length === 0) {
+                container.innerHTML = '<div class="empty-history" data-translate="no-history">No saved plants yet</div>';
+                return;
+            }
+
+            container.innerHTML = plants.map(plant => {
+                const date = formatDate(plant.created_at);
+                const confidence = plant.confidence_score ? parseFloat(plant.confidence_score).toFixed(1) : 'N/A';
+
+                let desc = '';
+                try {
+                    if (plant.raw_api_response) {
+                        const raw = typeof plant.raw_api_response === 'string'
+                            ? JSON.parse(plant.raw_api_response)
+                            : plant.raw_api_response;
+                        desc = raw.description || '';
+                    }
+                } catch (e) {}
+
+                const shortDesc = desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
+
+                return `
+                    <div class="plant-card" onclick="openDetailModal(${plant.id}, '${escapeHtml(plant.image_path)}', '${escapeHtml(plant.plant_name)}', ${plant.confidence_score || 0})">
+                        <img src="http://localhost:3000${plant.image_path}" alt="${escapeHtml(plant.plant_name)}"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                        <div class="plant-card-info">
+                            <div class="plant-card-name">${escapeHtml(plant.plant_name) || 'Unknown'}</div>
+                            <div class="plant-card-confidence">Confidence: ${confidence}%</div>
+                            <div style="font-size:13px; color:#555; margin-bottom:8px;">${escapeHtml(shortDesc)}</div>
+                            <div class="plant-card-date">${date}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        // ── Detail Modal ──
+        function openDetailModal(id, imagePath, name, confidence) {
+            const modal = document.getElementById('detailModal');
+            const body = document.getElementById('modalBody');
+            const pct = (parseFloat(confidence) * 100).toFixed(1);
+
+            body.innerHTML = `
+                <img src="http://localhost:3000${escapeHtml(imagePath)}" class="modal-img"
+                     onerror="this.style.display='none'">
+                <h3 style="color:#2c5530; font-weight:bold;">${escapeHtml(name)}</h3>
+                <p style="color:#666;">Confidence: ${pct}%</p>
+                <button class="btn btn-custom btn-danger-custom mt-3" onclick="deletePlant(${id})">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        async function deletePlant(id) {
+            if (!confirm('Delete this plant record?')) return;
+            try {
+                const resp = await fetch(`http://localhost:3000/api/plant/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                if (resp.ok) {
+                    showToast('Plant deleted', 'success');
+                    closeModal();
+                    loadPlantHistory();
+                } else {
+                    showToast('Delete failed', 'danger');
+                }
+            } catch (e) {
+                showToast('Delete failed', 'danger');
+            }
+        }
+
+        // ── Toast ──
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const colors = { success: '#2e7d32', danger: '#c62828', warning: '#f9a825', info: '#1565c0' };
+            const icons = { success: 'bi-check-circle-fill', danger: 'bi-x-circle-fill', warning: 'bi-exclamation-circle-fill', info: 'bi-info-circle-fill' };
+            const toast = document.createElement('div');
+            toast.className = 'toast-custom';
+            toast.style.borderLeft = `4px solid ${colors[type] || colors.info}`;
+            toast.innerHTML = `<i class="bi ${icons[type] || icons.info}" style="color:${colors[type] || colors.info}"></i> ${escapeHtml(message)}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        // ── Watering Schedule ──
+        let currentScheduleData = null;
+        let currentPlantNameForSchedule = '';
+
+        async function generateSchedule() {
+            const name = currentPlantNameForSchedule || document.querySelector('#detailContent .detail-value em')?.textContent || '';
+            if (!name) {
+                showToast('No plant identified yet', 'warning');
+                return;
+            }
+
+            const btn = document.querySelector('#scheduleOffer .btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> <span data-translate="generating">Generating...</span>';
+
+            try {
+                const resp = await fetch('http://localhost:3000/api/watering-schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plantName: name })
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok || !data.schedule) {
+                    showToast('Failed to generate schedule', 'danger');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-magic"></i> <span data-translate="create-schedule">Create Watering Schedule</span>';
+                    return;
+                }
+
+                const s = data.schedule;
+                currentScheduleData = s;
+                currentPlantNameForSchedule = name;
+
+                document.getElementById('scheduleDetails').innerHTML = `
+                    <div class="schedule-detail">
+                        <span class="schedule-detail-label"><i class="bi bi-arrow-repeat"></i> <span data-translate="frequency">Frequency</span></span>
+                        <span class="schedule-detail-value">${escapeHtml(s.frequency || '-')}</span>
+                    </div>
+                    <div class="schedule-detail">
+                        <span class="schedule-detail-label"><i class="bi bi-cup-straw"></i> <span data-translate="amount">Amount</span></span>
+                        <span class="schedule-detail-value">${escapeHtml(s.amount || '-')}</span>
+                    </div>
+                    <div class="schedule-detail">
+                        <span class="schedule-detail-label"><i class="bi bi-clock"></i> <span data-translate="best-time">Best Time</span></span>
+                        <span class="schedule-detail-value">${escapeHtml(s.bestTime || '-')}</span>
+                    </div>
+                    ${s.notes ? `
+                    <div class="schedule-detail">
+                        <span class="schedule-detail-label"><i class="bi bi-lightbulb"></i> <span data-translate="notes">Notes</span></span>
+                        <span class="schedule-detail-value">${escapeHtml(s.notes)}</span>
+                    </div>` : ''}
+                `;
+
+                document.getElementById('scheduleOffer').style.display = 'none';
+                document.getElementById('scheduleResult').classList.add('active');
+            } catch (e) {
+                showToast('Connection error', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-magic"></i> <span data-translate="create-schedule">Create Watering Schedule</span>';
+            }
+        }
+
+        async function acceptSchedule() {
+            if (!currentScheduleData) return;
+
+            try {
+                const resp = await fetch('http://localhost:3000/api/watering-schedules', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        plantName: currentPlantNameForSchedule,
+                        frequency: currentScheduleData.frequency || '',
+                        amount: currentScheduleData.amount || '',
+                        bestTime: currentScheduleData.bestTime || '',
+                        notes: currentScheduleData.notes || ''
+                    })
+                });
+
+                if (resp.status === 401) {
+                    showToast('Please login to save watering schedule', 'warning');
+                    return;
+                }
+
+                if (resp.ok) {
+                    showToast('Watering schedule saved!', 'success');
+                    document.getElementById('scheduleResult').innerHTML = `
+                        <div class="text-center py-2">
+                            <i class="bi bi-check-circle-fill" style="font-size:40px;color:#2e7d32;"></i>
+                            <p class="mt-2 fw-bold" style="color:#2e7d32;" data-translate="schedule-saved">Schedule saved successfully!</p>
+                        </div>
+                    `;
+                    currentScheduleData = null;
+                } else {
+                    showToast('Failed to save schedule', 'danger');
+                }
+            } catch (e) {
+                showToast('Connection error', 'danger');
+            }
+        }
+
+        function declineSchedule() {
+            currentScheduleData = null;
+            document.getElementById('scheduleResult').classList.remove('active');
+            document.getElementById('scheduleOffer').style.display = 'block';
+            showToast('Schedule cancelled', 'info');
+        }
+
+        // ── Helpers ──
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>

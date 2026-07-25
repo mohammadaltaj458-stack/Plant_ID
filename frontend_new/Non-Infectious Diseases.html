@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Non-Infectious Plant Problems</title>
+
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --main-green: #0b7a34;
+      --dark-green: #064f24;
+      --soft-green: #eaf7ee;
+      --light-bg: #f6fbf7;
+      --warning-soft: #fff8e6;
+      --warning-main: #b76e00;
+      --text-dark: #163020;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f7fff9, #eef7f0);
+      color: var(--text-dark);
+    }
+
+    .navbar-brand {
+      color: var(--main-green) !important;
+      font-weight: 800;
+      font-size: 28px;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: var(--main-green) !important;
+    }
+
+    .hero {
+      padding: 70px 20px 45px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top left, rgba(183, 110, 0, 0.13), transparent 35%),
+        linear-gradient(135deg, #fffdf7, #f2fff5);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--warning-soft);
+      color: var(--warning-main);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--dark-green);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 18px;
+      color: #4f5f55;
+      line-height: 1.7;
+    }
+
+    .tools-box {
+      background-color: white;
+      border-radius: 22px;
+      padding: 22px;
+      margin-top: -25px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2eee5;
+    }
+
+    .search-input {
+      border-radius: 14px;
+      padding: 13px 15px;
+      border: 1px solid #cfded4;
+    }
+
+    .search-input:focus {
+      border-color: var(--main-green);
+      box-shadow: 0 0 0 0.2rem rgba(11, 122, 52, 0.14);
+    }
+
+    .switch-btn {
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.25s;
+    }
+
+    .active-btn {
+      background-color: var(--main-green);
+      color: white;
+    }
+
+    .inactive-btn {
+      background-color: #eef6f0;
+      color: var(--dark-green);
+    }
+
+    .inactive-btn:hover {
+      background-color: var(--main-green);
+      color: white;
+    }
+
+    .problem-card {
+      height: 100%;
+      border: none;
+      border-radius: 22px;
+      background-color: white;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5efe7;
+      transition: 0.25s ease;
+      overflow: hidden;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.13);
+    }
+
+    .card-top {
+      background: linear-gradient(135deg, #fff8e6, #f4fff6);
+      padding: 22px;
+      border-bottom: 1px solid #edf2ee;
+    }
+
+    .problem-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background-color: var(--warning-soft);
+      color: var(--warning-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .problem-name {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--dark-green);
+      margin-bottom: 5px;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      background-color: var(--warning-soft);
+      color: var(--warning-main);
+    }
+
+    .problem-card .card-body {
+      padding: 22px;
+    }
+
+    .info-block {
+      margin-bottom: 16px;
+    }
+
+    .info-title {
+      font-weight: 800;
+      color: var(--main-green);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .info-text {
+      color: #4d5c53;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .advice-box {
+      background-color: #f3faf5;
+      border-left: 4px solid var(--main-green);
+      padding: 12px;
+      border-radius: 12px;
+      color: #44524a;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .empty-message {
+      display: none;
+      text-align: center;
+      padding: 50px 20px;
+      color: #68766d;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 25px;
+      text-align: center;
+      color: #6d7b72;
+      background-color: white;
+      border-top: 1px solid #e4eee6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        MyPlant <i class="bi bi-leaf-fill"></i>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="plants.html">Plants</a></li>
+          <li class="nav-item"><a class="nav-link active text-success fw-bold" href="Non-Infectious Diseases.html">Diseases</a></li>
+          <li class="nav-item"><a class="nav-link" href="Feedback.html">Feedback</a></li>
+          <li class="nav-item"><a class="nav-link" href="community.html">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+          <li class="nav-item ms-lg-3">
+            <span class="nav-link" style="cursor:pointer;">
+              <i class="bi bi-globe"></i> AR | EN
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      Non-Infectious Problems
+    </div>
+
+    <h1>Non-Infectious Plant Problems Guide</h1>
+
+    <p>
+      This section explains common plant problems caused by care conditions such as
+      watering, light, temperature, humidity, or nutrients. These problems are not caused
+      by contagious pathogens, but they can still affect plant health.
+    </p>
+  </section>
+
+  <section class="container">
+    <div class="tools-box">
+      <div class="row g-3 align-items-center">
+        <div class="col-lg-7">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-success"></i>
+            </span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="form-control search-input border-start-0" 
+              placeholder="Search plant problem..."
+              onkeyup="renderProblems()"
+            >
+          </div>
+        </div>
+
+        <div class="col-lg-5 text-lg-end">
+          <a href="Infectious Diseases.html" class="switch-btn inactive-btn me-2">
+            Infectious
+          </a>
+          <a href="Non-Infectious Diseases.html" class="switch-btn active-btn">
+            Non-Infectious
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container py-5">
+    <div id="problemsContainer" class="row g-4"></div>
+
+    <div id="emptyMessage" class="empty-message">
+      <i class="bi bi-search"></i>
+      No problem found. Try another keyword.
+    </div>
+  </main>
+
+  <footer>
+    MyPlant © 2026 — Non-Infectious Plant Problems Guide
+  </footer>
+
+  <script>
+    const problems = [
+      {
+        name: "Overwatering",
+        type: "Watering Problem",
+        symptoms: "Yellow leaves, soft stems, wet soil, and possible root smell.",
+        cause: "Too much water or poor drainage prevents roots from getting oxygen.",
+        advice: "Let the soil dry before watering again and use pots with drainage holes."
+      },
+      {
+        name: "Underwatering",
+        type: "Watering Problem",
+        symptoms: "Dry soil, wilting leaves, crispy leaf edges, and slow growth.",
+        cause: "The plant is not receiving enough water for its needs.",
+        advice: "Water deeply and check soil moisture regularly."
+      },
+      {
+        name: "Yellow Leaves",
+        type: "Care Problem",
+        symptoms: "Leaves turn yellow and may fall from the plant.",
+        cause: "Overwatering, nutrient deficiency, poor light, or natural aging.",
+        advice: "Check soil moisture, light level, and fertilization schedule."
+      },
+      {
+        name: "Sunburn",
+        type: "Light Problem",
+        symptoms: "Brown or white dry patches appear on leaves exposed to strong sun.",
+        cause: "Too much direct sunlight, especially for indoor shade plants.",
+        advice: "Move the plant to bright indirect light and remove badly damaged leaves."
+      },
+      {
+        name: "Nutrient Deficiency",
+        type: "Soil Problem",
+        symptoms: "Pale leaves, weak growth, yellowing, or poor flowering.",
+        cause: "Lack of essential nutrients in the soil.",
+        advice: "Use suitable fertilizer and avoid over-fertilizing."
+      },
+      {
+        name: "Cold Damage",
+        type: "Temperature Problem",
+        symptoms: "Leaves become dark, soft, or curled after exposure to cold.",
+        cause: "Low temperature or cold air drafts.",
+        advice: "Move the plant to a warmer place away from cold windows or AC airflow."
+      },
+      {
+        name: "Low Humidity",
+        type: "Humidity Problem",
+        symptoms: "Brown leaf tips, dry edges, and curling leaves.",
+        cause: "Dry indoor air, especially in air-conditioned rooms.",
+        advice: "Increase humidity by grouping plants or using a humidity tray."
+      },
+      {
+        name: "Transplant Shock",
+        type: "Growth Stress",
+        symptoms: "Wilting, leaf drop, or slow growth after repotting.",
+        cause: "Root disturbance or sudden change in soil and pot conditions.",
+        advice: "Keep care stable and avoid fertilizing immediately after repotting."
+      }
+    ];
+
+    function renderProblems() {
+      const container = document.getElementById("problemsContainer");
+      const emptyMessage = document.getElementById("emptyMessage");
+      const searchValue = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      container.innerHTML = "";
+
+      const filteredProblems = problems.filter(function(problem) {
+        return (
+          problem.name.toLowerCase().includes(searchValue) ||
+          problem.type.toLowerCase().includes(searchValue) ||
+          problem.symptoms.toLowerCase().includes(searchValue) ||
+          problem.cause.toLowerCase().includes(searchValue)
+        );
+      });
+
+      if (filteredProblems.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+      }
+
+      emptyMessage.style.display = "none";
+
+      filteredProblems.forEach(function(problem) {
+        container.innerHTML += `
+          <div class="col-lg-4 col-md-6">
+            <div class="card problem-card">
+              <div class="card-top">
+                <div class="problem-icon">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h3 class="problem-name">${problem.name}</h3>
+                <span class="type-badge">${problem.type}</span>
+              </div>
+
+              <div class="card-body">
+                <div class="info-block">
+                  <div class="info-title">
+                    <i class="bi bi-eye-fill"></i> Symptoms
+                  </div>
+                  <p class="info-text">${problem.symptoms}</p>
+                </div>
+
+                <div class="info-block">
+                  <div class="info-title">
+                    <i class="bi bi-question-circle-fill"></i> Possible Cause
+                  </div>
+                  <p class="info-text">${problem.cause}</p>
+                </div>
+
+                <div class="advice-box">
+                  <strong>Advice:</strong> ${problem.advice}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    renderProblems();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

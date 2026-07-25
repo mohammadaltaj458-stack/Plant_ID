@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MyPlant Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .feature-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .plant-id-link,
+    .plant-id-link:hover,
+    .plant-id-link:active,
+    .plant-id-link:visited {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    /* Home */
+    .home {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url("images/background.jpeg") center/cover;
+      height: 70vh;
+      color: white;
+    }
+
+    /* Sections */
+    .plants-section {
+      background-color: #eaffc7;
+    }
+
+    .card img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    footer {
+      background-color: #2e7d32;
+      color: white;
+    }
+    .community-section {
+  background: linear-gradient(135deg, #f6fff6, #edf7ef);
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #eaf7e8;
+  color: #136a03;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-weight: 700;
+}
+
+.community-title {
+  font-weight: 800;
+  color: #1f2d1f;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
+
+.community-subtitle {
+  max-width: 720px;
+  margin: 12px auto 0;
+  color: #666;
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+.community-info-card,
+.community-form-card {
+  background-color: white;
+  border-radius: 24px;
+  padding: 30px;
+  border: 1px solid #dfeadf;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.community-icon {
+  width: 75px;
+  height: 75px;
+  border-radius: 22px;
+  background-color: #eaf7e8;
+  color: #136a03;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.community-info-card h3,
+.community-form-card h3 {
+  color: #136a03;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.community-info-card p,
+.form-note {
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.community-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.community-feature i {
+  color: #136a03;
+}
+
+.community-whatsapp-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 18px;
+  background-color: #25d366;
+  color: white;
+  text-decoration: none;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-weight: 800;
+  transition: 0.3s;
+}
+
+.community-whatsapp-btn:hover {
+  background-color: #1ebe5d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.25);
+}
+
+.community-form-card .form-control,
+.community-form-card .form-select {
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid #cfd8d1;
+}
+
+.community-form-card .form-control:focus,
+.community-form-card .form-select:focus {
+  border-color: #136a03;
+  box-shadow: 0 0 0 0.2rem rgba(19, 106, 3, 0.15);
+}
+
+.community-form-card textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.community-send-btn {
+  background-color: #136a03;
+  color: white;
+  border-radius: 14px;
+  padding: 13px;
+  font-weight: 800;
+  border: none;
+  transition: 0.3s;
+}
+
+.community-send-btn:hover {
+  background-color: #0d4f02;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(19, 106, 3, 0.25);
+}
+
+@media (max-width: 768px) {
+  .community-title {
+    font-size: 28px;
+  }
+
+  .community-info-card,
+  .community-form-card {
+    padding: 22px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-success"> MyPlant <i class="bi bi-leaf-fill text-success"></i></a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home" data-translate="nav-home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#plants" data-translate="nav-plants">Plants</a></li>
+          <li class="nav-item"><a class="nav-link" href="#diseases" data-translate="nav-diseases">Diseases</a></li>
+          <li class="nav-item">
+             <a class="nav-link" href="community.html" data-translate="nav-community">Community</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#about" data-translate="nav-about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="feedback.html" data-translate="nav-feedback">Feedback</a></li>
+
+          <li class="nav-item ms-3">
+            <span class="nav-link" data-lang-toggle style="cursor: pointer;">
+              <i class="bi bi-globe"></i> AR | EN
+            </span>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="home d-flex align-items-center text-center">
+    <div class="container">
+      <h1 class="fw-bold" data-translate="welcome-title">Welcome to the world of plants!</h1>
+      <p class="lead" data-translate="welcome-subtitle">An all-in-one platform to identify plants, explore their varieties, and their care </p>
+      <div class="input-group w-50 mx-auto">
+        <span class="input-group-text">
+          <i class="bi bi-search text-secondary"></i>
+        </span>
+        <input id="searchInput" type="text" class="form-control" data-translate="search-placeholder" placeholder="Search for a plant..."
+          onkeyup="searchPlant()">
+      </div>
+    </div>
+  </section>
+
+
+        <section class="py-5 text-center">
+            <div class="container">
+              <h2 class="section-title" data-translate="special-title">What Makes MyPlant Special</h2>
+              <div class="row g-4 justify-content-center">
+                <!-- Reminder System  -->
+                <div class="col-md-4">
+                  <a href="reminder.html" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100 feature-card">
+                      <div class="card-body">
+                        <h5><i class="bi bi-clock-fill"></i> <span data-translate="care-time-title">Care Time</span></h5>
+                        <p data-translate="care-time-desc">Set reminders for watering, and receive timely notifications for your plants to stay healthy.</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+    
+    
+                <div class="col-md-4 mx-auto">
+                  <a href="plantAi.html" class="plant-id-link">
+                    <div class="card shadow-sm h-100 feature-card">
+                      <div class="card-body">
+                        <h5><i class="bi bi-camera"></i> <span data-translate="plant-id-title">Plant Identification</span></h5>
+                        <p data-translate="plant-id-desc">Not sure what plant it is? Use AI to identify it quickly and get information about it</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Feedback -->
+                <div class="col-md-4">
+                  <a href="feedback.html" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100 feature-card">
+                      <div class="card-body">
+                        <h5><i class="bi bi-chat-left-text-fill"></i> <span data-translate="feedback-title">Feedback</span></h5>
+                        <p data-translate="feedback-desc">Send complaints or suggestions so the admin can review user issues and improve the platform.</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+    
+                <!-- Weather -->
+                <div class="col-md-4">
+                  <a href="weather.html" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100 feature-card">
+                      <div class="card-body">
+                        <h5><i class="bi bi-cloud-fill"></i> <span data-translate="weather-title">Weather</span></h5>
+                        <p data-translate="weather-desc">Check the weather near you to adjust watering and care routines , especially on hot, rainy, or windy days.</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Watering Schedule -->
+                <div class="col-md-4">
+                  <a href="schedules.html" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100 feature-card">
+                      <div class="card-body">
+                        <h5><i class="bi bi-droplet-half"></i> <span data-translate="watering-schedules-title">Watering Schedule</span></h5>
+                        <p data-translate="watering-schedules-desc">View your personalized AI-generated watering schedules for all your identified plants.</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4 justify-content-center">
+        <!-- Plant Nursery -->
+        <div class="col-md-3">
+          <a href="PlantNursery.html" class="text-decoration-none text-dark">
+            <div class="card shadow-sm h-100 feature-card">
+              <div class="card-body">
+                <h5><i class="bi bi-shop"></i> <span data-translate="nursery-title">Plant Nursery</span></h5>
+                <p data-translate="nursery-desc">
+                  Find nearby plant nurseries across Jordan and discover
+                  the nearest nursery to your location.
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plants -->
+  <section id="plants" class="plants-section py-5">
+    <div class="container">
+      <h2 class="section-title text-center" data-translate="explore-plants">Explore The Plants</h2>
+
+      <div class="row g-4" id="plantList">
+
+        <div class="col-md-4 plant-card">
+          <div class="card">
+            <img src="images/snackplant.jpg">
+            <div class="card-body text-center">
+              <h6>Snake Plant</h6>
+              <small>Sansevieria</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 plant-card">
+          <div class="card">
+            <img src="images/Pothosplant.jpg">
+            <div class="card-body text-center">
+              <h6>Pothos</h6>
+              <small>Epipremnum aureum</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 plant-card">
+          <div class="card">
+            <img src="images/Spider Plant.jpg">
+            <div class="card-body text-center">
+              <h6>Spider Plant</h6>
+              <small> Chlorophytum comosum</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="text-end mt-4">
+        <a href="plants.html" class="text-decoration-none text-dark fw-bold more-link">
+          <span data-translate="see-more-plants">See more plants</span>
+          <i class="bi bi-arrow-right-circle-fill ms-2 text-success fs-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Diseases -->
+  <section id="diseases" class="py-5">
+    <div class="container text-center">
+      <h2 class="section-title" data-translate="plant-diseases">Plant Diseases</h2>
+      <div class="row g-4">
+
+        <div class="col-md-6">
+          <a href="Infectious Diseases.html" class="plant-id-link">
+            <div class="card h-100 shadow-sm feature-card">
+              <div class="card-body">
+                <h5><i class="bi bi-virus"></i> <span data-translate="infectious-diseases">Infectious Diseases</span></h5>
+                <p data-translate="infectious-desc">
+                  Caused by bacteria, fungi or viruses.<br>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6">
+          <a href="Non-Infectious Diseases.html" class="plant-id-link">
+            <div class="card h-100 shadow-sm feature-card">
+              <div class="card-body">
+                <h5><i class="bi bi-exclamation-circle-fill"></i> <span data-translate="non-infectious-diseases">Non-Infectious Diseases</span></h5>
+                <p data-translate="non-infectious-desc">
+                  Caused by environment or nutrition issues.<br>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+     
+
+<!-- Community Section -->
+<section id="community" class="community-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-badge">
+        <i class="bi bi-people-fill"></i>
+        <span data-translate="community-title">Plant Community</span>
+      </span>
+
+      <h2 class="community-title mt-3" data-translate="community-join-title">Join Our Plant Community</h2>
+
+      <p class="community-subtitle" data-translate="community-join-desc">
+        Connect with plant lovers, ask questions, share your plant problems,
+        and get support through WhatsApp.
+      </p>
+    </div>
+
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-5">
+        <div class="community-info-card h-100">
+          <div class="community-icon">
+            <i class="bi bi-whatsapp"></i>
+          </div>
+
+          <h3 data-translate="community-grow-title">Grow Together 🌿</h3>
+
+          <p data-translate="community-grow-desc">
+            Our community helps users discuss plant care, diseases,
+            watering schedules, sunlight needs, and daily plant tips.
+          </p>
+
+          <div class="community-feature">
+            <i class="bi bi-check-circle-fill"></i>
+            <span data-translate="community-feature-care">Ask about plant diseases and care tips</span>
+          </div>
+
+          <div class="community-feature">
+            <i class="bi bi-check-circle-fill"></i>
+            <span data-translate="community-feature-photos">Share your plant photos with others</span>
+          </div>
+
+          <div class="community-feature">
+            <i class="bi bi-check-circle-fill"></i>
+            <span data-translate="community-feature-whatsapp">Get help directly through WhatsApp</span>
+          </div>
+
+          <a 
+            href="https://chat.whatsapp.com/LKi8ZYCj5CnLATSdWQ9Awg"
+            target="_blank"
+            class="community-whatsapp-btn"
+          >
+            <i class="bi bi-whatsapp"></i>
+            <span data-translate="community-join-btn">Join WhatsApp Group</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="community-form-card h-100">
+          <h3 data-translate="community-form-title">Contact Community Admin</h3>
+          <p class="form-note" data-translate="community-form-note">
+            Fill the form and send your question directly on WhatsApp.
+          </p>
+
+          <div class="mb-3">
+            <label for="communityName" class="form-label" data-translate="name-label">Your Name</label>
+            <input 
+              type="text" 
+              id="communityName" 
+              class="form-control" 
+              data-translate="name-placeholder"
+              placeholder="Enter your name"
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="communityPlant" class="form-label" data-translate="plant-type-label">Plant Type</label>
+            <input 
+              type="text" 
+              id="communityPlant" 
+              class="form-control" 
+              data-translate="plant-type-placeholder"
+              placeholder="Example: Rose, Mint, Cactus..."
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="communityProblem" class="form-label" data-translate="problem-label">Problem Type</label>
+            <select id="communityProblem" class="form-select">
+              <option value="" data-translate="choose-problem">Choose a problem</option>
+              <option value="Watering problem" data-translate="watering-problem">Watering problem</option>
+              <option value="Yellow leaves" data-translate="yellow-leaves">Yellow leaves</option>
+              <option value="Plant disease" data-translate="plant-disease">Plant disease</option>
+              <option value="Sunlight issue" data-translate="sunlight-issue">Sunlight issue</option>
+              <option value="Soil or fertilizer problem" data-translate="soil-fertilizer">Soil or fertilizer problem</option>
+              <option value="General question" data-translate="general-question">General question</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="communityMessage" class="form-label" data-translate="message-label">Your Message</label>
+            <textarea 
+              id="communityMessage" 
+              class="form-control" 
+              data-translate="message-placeholder"
+              placeholder="Describe your plant problem..."
+            ></textarea>
+          </div>
+
+          <button class="btn community-send-btn w-100" onclick="sendCommunityWhatsApp()">
+            <i class="bi bi-whatsapp"></i>
+            <span data-translate="send-whatsapp">Send via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- About -->
+  <section id="about" class="py-5 bg-light text-center">
+    <div class="container">
+      <h2 class="section-title" data-translate="about-title">About MyPlant</h2>
+      <p data-translate="about-text">
+        MyPlant is a simple and user-friendly platform designed to help plant lovers identify plants, understand their
+        diseases, and learn the best care practices.
+        Our goal is to make plant care easier by providing useful information such as plant identification,
+        weather-based tips, reminders, and disease awareness.
+        This project was developed as an educational frontend project, focusing on clean design, usability, and
+        accessibility, using modern web technologies to create an enjoyable learning experience.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-4">
+    <p class="mb-1" data-translate="footer-text"> MyPlant – Botanist in your pocket</p>
+    <small data-translate="footer-copyright">© 2025 MyPlant . All rights reserved</small>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Translations + Language Switcher -->
+  <script src="translations.js"></script>
+  <script src="language.js"></script>
+
+  <script>
+    function searchPlant() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let plants = document.getElementsByClassName("plant-card");
+
+      for (let i = 0; i < plants.length; i++) {
+        let text = plants[i].innerText.toLowerCase();
+        plants[i].style.display = text.includes(input) ? "block" : "none";
+      }
+    }
+
+    function sendCommunityWhatsApp() {
+      var name = document.getElementById("communityName").value.trim();
+      var plant = document.getElementById("communityPlant").value.trim();
+      var problem = document.getElementById("communityProblem").value;
+      var message = document.getElementById("communityMessage").value.trim();
+
+      if (name === "" || plant === "" || problem === "" || message === "") {
+        alert("Please fill all community fields");
+        return;
+      }
+
+      var phoneNumber = "962789666693";
+
+      var whatsappMessage =
+        "Hello Plant Community Admin,%0A%0A" +
+        "Name: " + encodeURIComponent(name) + "%0A" +
+        "Plant Type: " + encodeURIComponent(plant) + "%0A" +
+        "Problem Type: " + encodeURIComponent(problem) + "%0A%0A" +
+        "Message:%0A" + encodeURIComponent(message);
+
+      var whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + whatsappMessage;
+
+      window.open(whatsappURL, "_blank");
+    }
+  </script>
+
+</body>
+
+</html>

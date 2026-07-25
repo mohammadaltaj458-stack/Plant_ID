@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Feedback Dashboard - MyPlant</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f8f4; color: #1e2c1f; }
+        .navbar { background: #fff; padding: 16px 8%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 18px rgba(0,0,0,0.08); }
+        .brand { color: #198754; font-weight: 800; font-size: 22px; text-decoration: none; }
+        .nav-links a { color: #245b2a; text-decoration: none; margin-left: 18px; font-weight: 600; }
+        .container { max-width: 1180px; margin: 36px auto; padding: 0 20px; }
+        h1 { color: #167a2d; margin-bottom: 8px; }
+        .subtitle { color: #637166; margin-bottom: 26px; }
+        .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: #fff; border-radius: 18px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); border: 1px solid #e1ece2; }
+        .stat-card span { color: #667568; font-weight: 700; font-size: 13px; }
+        .stat-card strong { display: block; color: #155d2a; font-size: 34px; margin-top: 8px; }
+        .toolbar { background: #fff; border-radius: 18px; padding: 18px; display: flex; gap: 14px; align-items: end; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .toolbar label { display: block; font-weight: 700; margin-bottom: 7px; }
+        select, button { padding: 11px 12px; border-radius: 10px; border: 1px solid #cbdacb; font-size: 14px; }
+        button { background: #198754; color: #fff; border: 0; font-weight: 800; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eef3ef; vertical-align: top; }
+        th { background: #e8f6ed; color: #115f2b; font-size: 13px; text-transform: uppercase; }
+        .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+        .complaint { background: #fff0e6; color: #a34b00; }
+        .suggestion { background: #e8f0ff; color: #214c9a; }
+        .status-new { background: #edf7ed; color: #146c2e; }
+        .status-progress { background: #fff8df; color: #8a6300; }
+        .status-resolved { background: #e6f2ff; color: #1a5c94; }
+        .message { max-width: 360px; color: #4f5a52; line-height: 1.5; }
+        .empty { background: #fff; padding: 28px; border-radius: 18px; text-align: center; color: #68746a; display: none; }
+
+        .login-card { max-width: 400px; margin: 60px auto; background: #fff; border-radius: 22px; padding: 30px; box-shadow: 0 10px 30px rgba(17, 91, 42, 0.12); border: 1px solid #e5efe6; text-align: center; }
+        .login-card h2 { color: #167a2d; margin-bottom: 8px; }
+        .login-card p { color: #637166; margin-bottom: 20px; }
+        .login-card input { width: 100%; padding: 13px 14px; border: 1px solid #cfdccf; border-radius: 12px; font-size: 15px; margin-bottom: 14px; outline-color: #198754; }
+        .login-card button { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: #198754; color: white; font-weight: 800; font-size: 16px; cursor: pointer; }
+        .login-card button:hover { background: #126b40; }
+        .login-card .error-msg { color: #b42318; margin-top: 10px; display: none; }
+        .login-card .info-box { background: #e8f6ed; border-radius: 12px; padding: 12px; margin-bottom: 18px; font-size: 13px; color: #116d32; }
+
+        @media (max-width: 850px) { .stats { grid-template-columns: repeat(2, 1fr); } .toolbar { flex-direction: column; align-items: stretch; } table { font-size: 13px; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="brand">MyPlant 🌿</a>
+        <div class="nav-links">
+            <a href="index.html" data-translate="nav-home">Home</a>
+            <a href="Feedback.html" data-translate="feedback-form-link">Feedback Form</a>
+            <a href="javascript:void(0)" data-lang-toggle style="cursor: pointer;">🌐 AR | EN</a>
+        </div>
+    </nav>
+
+    <div class="login-card" id="loginSection">
+        <h2 data-translate="admin-login-title">Admin Login</h2>
+        <p data-translate="admin-login-subtitle">Please login with your admin account to access the dashboard</p>
+        <div class="info-box">Default Admin: admin@myplant.com / admin123</div>
+        <input type="email" id="adminEmail" placeholder="Admin Email" required>
+        <input type="password" id="adminPassword" placeholder="Password" required>
+        <button id="adminLoginBtn" data-translate="login-btn">Login</button>
+        <div class="error-msg" id="loginError"></div>
+    </div>
+
+    <main class="container" id="dashboardSection" style="display:none;">
+        <h1 data-translate="admin-feedback-title">Admin Feedback Dashboard</h1>
+        <p class="subtitle" data-translate="admin-feedback-subtitle">Review complaints and suggestions submitted by users, classify issues, and follow up on improvement actions.</p>
+
+        <section class="stats">
+            <div class="stat-card"><span data-translate="stat-total">Total Feedback</span><strong id="totalCount">0</strong></div>
+            <div class="stat-card"><span data-translate="stat-complaints">Complaints</span><strong id="complaintCount">0</strong></div>
+            <div class="stat-card"><span data-translate="stat-suggestions">Suggestions</span><strong id="suggestionCount">0</strong></div>
+            <div class="stat-card"><span data-translate="stat-new">New Items</span><strong id="newCount">0</strong></div>
+        </section>
+
+        <section class="toolbar">
+            <div>
+                <label for="typeFilter" data-translate="filter-type">Type</label>
+                <select id="typeFilter">
+                    <option value="" data-translate="filter-all">All</option>
+                    <option value="Complaint" data-translate="complaint">Complaint</option>
+                    <option value="Suggestion" data-translate="suggestion">Suggestion</option>
+                </select>
+            </div>
+            <div>
+                <label for="statusFilter" data-translate="filter-status">Status</label>
+                <select id="statusFilter">
+                    <option value="" data-translate="filter-all">All</option>
+                    <option value="New" data-translate="filter-new">New</option>
+                    <option value="In Progress" data-translate="filter-in-progress">In Progress</option>
+                    <option value="Resolved" data-translate="filter-resolved">Resolved</option>
+                </select>
+            </div>
+            <button id="refreshBtn" data-translate="refresh-btn">Refresh</button>
+            <button id="logoutBtn" style="background:#6c757d;">Logout</button>
+        </section>
+
+        <div class="empty" id="emptyState">No feedback records were found.</div>
+        <table id="feedbackTable">
+            <thead>
+                <tr>
+                    <th data-translate="col-id">ID</th>
+                    <th data-translate="col-type">Type</th>
+                    <th data-translate="col-category">Category</th>
+                    <th data-translate="col-title-details">Title & Details</th>
+                    <th data-translate="col-user">User</th>
+                    <th data-translate="col-status">Status</th>
+                    <th data-translate="col-created">Created At</th>
+                </tr>
+            </thead>
+            <tbody id="feedbackBody"></tbody>
+        </table>
+    </main>
+
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+
+    <script>
+        const feedbackBody = document.getElementById('feedbackBody');
+        const emptyState = document.getElementById('emptyState');
+        const table = document.getElementById('feedbackTable');
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const loginError = document.getElementById('loginError');
+
+        function showDashboard() {
+            loginSection.style.display = 'none';
+            dashboardSection.style.display = 'block';
+        }
+
+        function showLogin() {
+            loginSection.style.display = 'block';
+            dashboardSection.style.display = 'none';
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user?.role === 'admin') {
+                        showDashboard();
+                        loadFeedback();
+                        return;
+                    }
+                }
+            } catch (e) {}
+            showLogin();
+        }
+
+        document.getElementById('adminLoginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            loginError.style.display = 'none';
+
+            if (!email || !password) {
+                loginError.textContent = 'Please enter email and password';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+
+                if (response.ok && data.user?.role === 'admin') {
+                    showDashboard();
+                    loadFeedback();
+                } else {
+                    loginError.textContent = 'Invalid admin credentials';
+                    loginError.style.display = 'block';
+                }
+            } catch (error) {
+                loginError.textContent = 'Connection error. Please try again.';
+                loginError.style.display = 'block';
+            }
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+            try {
+                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            } catch (e) {}
+            showLogin();
+        });
+
+        function statusClass(status) {
+            if (status === 'In Progress') return 'status-progress';
+            if (status === 'Resolved') return 'status-resolved';
+            return 'status-new';
+        }
+
+        function renderStats(summary) {
+            document.getElementById('totalCount').textContent = summary.total || 0;
+            document.getElementById('complaintCount').textContent = summary.Complaint || 0;
+            document.getElementById('suggestionCount').textContent = summary.Suggestion || 0;
+            document.getElementById('newCount').textContent = summary.New || 0;
+        }
+
+        function renderTable(feedbacks) {
+            feedbackBody.innerHTML = '';
+            emptyState.style.display = feedbacks.length ? 'none' : 'block';
+            table.style.display = feedbacks.length ? 'table' : 'none';
+
+            feedbacks.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${item.id}</td>
+                    <td><span class="badge ${item.feedback_type === 'Complaint' ? 'complaint' : 'suggestion'}">${item.feedback_type}</span></td>
+                    <td>${item.complaint_category || '-'}</td>
+                    <td><strong>${item.title}</strong><div class="message">${item.message}</div></td>
+                    <td>${item.username || item.email || 'Guest User'}</td>
+                    <td>
+                        <select data-id="${item.id}" class="status-select">
+                            <option value="New" ${item.status === 'New' ? 'selected' : ''}>New</option>
+                            <option value="In Progress" ${item.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="Resolved" ${item.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+                        </select>
+                        <div><span class="badge ${statusClass(item.status)}">${item.status}</span></div>
+                    </td>
+                    <td>${new Date(item.created_at).toLocaleString()}</td>
+                `;
+                feedbackBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', async (event) => {
+                    await updateStatus(event.target.dataset.id, event.target.value);
+                });
+            });
+        }
+
+        async function loadFeedback() {
+            const type = document.getElementById('typeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const params = new URLSearchParams();
+            if (type) params.append('type', type);
+            if (status) params.append('status', status);
+
+            try {
+                const response = await fetch(`/api/admin/feedback?${params.toString()}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Unable to load feedback');
+                }
+
+                renderStats(data.summary || {});
+                renderTable(data.feedbacks || []);
+            } catch (error) {
+                renderStats({});
+                renderTable([]);
+                emptyState.textContent = 'Unable to load feedback records. Please check the backend and database connection.';
+            }
+        }
+
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(`/api/admin/feedback/${id}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ status })
+                });
+                if (!response.ok) throw new Error('Unable to update status');
+                await loadFeedback();
+            } catch (error) {
+                alert('Status update failed');
+            }
+        }
+
+        document.getElementById('refreshBtn').addEventListener('click', loadFeedback);
+        document.getElementById('typeFilter').addEventListener('change', loadFeedback);
+        document.getElementById('statusFilter').addEventListener('change', loadFeedback);
+        checkAuth();
+    </script>
+</body>
+</html>

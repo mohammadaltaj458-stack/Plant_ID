@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Plant Community</title>
+
+  <!-- Bootstrap -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --main-green: #136a03;
+      --dark-green: #0d4f02;
+      --soft-green: #eaf7e8;
+      --light-bg: #f4f8f4;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(19, 106, 3, 0.18), transparent 35%),
+        linear-gradient(135deg, #f8fff8, #edf4ef);
+      padding: 25px;
+    }
+
+    .community-wrapper {
+      min-height: calc(100vh - 50px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .community-card {
+      width: 100%;
+      max-width: 950px;
+      background-color: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, var(--main-green), var(--dark-green));
+      color: white;
+      padding: 45px 35px;
+      text-align: center;
+    }
+
+    .hero-icon {
+      width: 82px;
+      height: 82px;
+      background-color: rgba(255, 255, 255, 0.18);
+      border-radius: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 18px;
+      font-size: 38px;
+    }
+
+    .hero-section h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero-section p {
+      max-width: 620px;
+      margin: auto;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.7;
+    }
+
+    .content-section {
+      padding: 35px;
+    }
+
+    .info-box {
+      background-color: var(--soft-green);
+      border-radius: 20px;
+      padding: 22px;
+      height: 100%;
+      border: 1px solid #d7ead4;
+    }
+
+    .info-box h3 {
+      color: var(--main-green);
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    .feature-item i {
+      color: var(--main-green);
+      font-size: 22px;
+    }
+
+    .form-box {
+      background-color: var(--light-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid #e1e8e1;
+    }
+
+    .form-label {
+      font-weight: 700;
+      color: #333;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid #cfd8d1;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--main-green);
+      box-shadow: 0 0 0 0.2rem rgba(19, 106, 3, 0.15);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: none;
+    }
+
+    .btn-whatsapp {
+      background-color: #25d366;
+      border: none;
+      color: white;
+      border-radius: 14px;
+      padding: 13px;
+      font-weight: 800;
+      transition: 0.3s;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #1ebe5d;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-group-link {
+      background-color: var(--main-green);
+      border: none;
+      color: white;
+      border-radius: 14px;
+      padding: 13px;
+      font-weight: 800;
+      transition: 0.3s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .btn-group-link:hover {
+      background-color: var(--dark-green);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .note {
+      color: #777;
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+
+      .hero-section {
+        padding: 35px 22px;
+      }
+
+      .hero-section h1 {
+        font-size: 29px;
+      }
+
+      .content-section {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-success" href="index.html"> MyPlant <i class="bi bi-leaf-fill text-success"></i></a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html" data-translate="nav-home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#plants" data-translate="nav-plants">Plants</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#diseases" data-translate="nav-diseases">Diseases</a></li>
+          <li class="nav-item">
+             <a class="nav-link" href="community.html" data-translate="nav-community">Community</a>
+          </li>
+          <li class="nav-item ms-3">
+            <span class="nav-link" data-lang-toggle style="cursor: pointer;">
+              <i class="bi bi-globe"></i> AR | EN
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="community-wrapper">
+    <div class="community-card">
+
+      <div class="hero-section">
+        <div class="hero-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+
+        <h1 data-translate="community-title">Plant Community</h1>
+
+        <p data-translate="community-subtitle">
+          Ask plant care questions, describe your plant problem,
+          and contact agricultural support directly through WhatsApp
+        </p>
+      </div>
+
+      <div class="content-section">
+        <div class="row g-4">
+
+          <!-- Info -->
+          
+
+          <!-- Form -->
+          <div class="col-lg-7">
+            <div class="form-box">
+              <h3 class="fw-bold mb-3" style="color:#136a03;" data-translate="expert-title">
+                Ask an Agricultural Expert
+              </h3>
+
+              <div class="mb-3">
+                <label for="userName" class="form-label" data-translate="name-label">Your Name</label>
+                <input 
+                  type="text" 
+                  id="userName" 
+                  class="form-control" 
+                  data-translate="name-placeholder"
+                  placeholder="Enter your name"
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="plantType" class="form-label" data-translate="plant-type-label">Plant Type</label>
+                <input 
+                  type="text" 
+                  id="plantType" 
+                  class="form-control" 
+                  data-translate="plant-type-placeholder"
+                  placeholder="Example: Rose, Cactus, Mint..."
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="problemType" class="form-label" data-translate="problem-label">Problem Type</label>
+                <select id="problemType" class="form-select">
+                  <option value="" data-translate="choose-problem">Choose a problem</option>
+                  <option value="Watering problem" data-translate="watering-problem">Watering problem</option>
+                  <option value="Yellow leaves" data-translate="yellow-leaves">Yellow leaves</option>
+                  <option value="Plant disease" data-translate="plant-disease">Plant disease</option>
+                  <option value="Sunlight issue" data-translate="sunlight-issue">Sunlight issue</option>
+                  <option value="Soil or fertilizer problem" data-translate="soil-fertilizer">Soil or fertilizer problem</option>
+                  <option value="General question" data-translate="general-question">General question</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="message" class="form-label" data-translate="message-label">Your Message</label>
+                <textarea 
+                  id="message" 
+                  class="form-control" 
+                  data-translate="message-placeholder"
+                  placeholder="Describe your plant problem..."
+                ></textarea>
+              </div>
+
+              <button class="btn btn-whatsapp w-100" onclick="sendToWhatsApp()">
+                <i class="bi bi-whatsapp me-1"></i>
+                <span data-translate="send-whatsapp">Send via WhatsApp</span>
+              </button>
+
+              <p class="note" data-translate="whatsapp-note">
+                This will open WhatsApp with your message ready to send.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Translations + Language Switcher -->
+  <script src="translations.js"></script>
+  <script src="language.js"></script>
+
+  <script>
+    function sendToWhatsApp() {
+      var name = document.getElementById("userName").value.trim();
+      var plantType = document.getElementById("plantType").value.trim();
+      var problemType = document.getElementById("problemType").value;
+      var message = document.getElementById("message").value.trim();
+
+      if (name === "" || plantType === "" || problemType === "" || message === "") {
+        alert("Please fill all fields");
+        return;
+      }
+
+        var phoneNumber = "962789666693";
+
+      var whatsappMessage =
+        "Hello Plant Community Admin,%0A%0A" +
+        "Name: " + encodeURIComponent(name) + "%0A" +
+        "Plant Type: " + encodeURIComponent(plantType) + "%0A" +
+        "Problem Type: " + encodeURIComponent(problemType) + "%0A%0A" +
+        "Message:%0A" + encodeURIComponent(message);
+
+            var whatsappURL = "https://wa.me/" + phoneNumber + "?text=" + whatsappMessage;
+         window.open(whatsappURL, "_blank");
+    }
+  </script>
+
+</body>
+</html>

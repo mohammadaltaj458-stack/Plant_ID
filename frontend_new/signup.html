@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - MyPlant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            margin: auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header i {
+            font-size: 3rem;
+            color: #2e7d32;
+        }
+
+        .auth-header h2 {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+        }
+
+        .btn-success {
+            background-color: #2e7d32;
+            border-color: #2e7d32;
+            padding: 0.75rem;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #1b5e20;
+            border-color: #1b5e20;
+            transform: translateY(-2px);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-footer a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Navbar adjustments for standalone page */
+        .navbar-brand {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Simple Navbar to go back home -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-success" href="index.html"> MyPlant <i
+                    class="bi bi-leaf-fill text-success"></i></a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item ms-3">
+                        <span class="nav-link" data-lang-toggle style="cursor: pointer;">
+                            <i class="bi bi-globe"></i> AR | EN
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-grow-1">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="bi bi-person-plus-fill"></i>
+                <h2 data-translate="create-account">Create Account</h2>
+                <p class="text-muted" data-translate="signup-subtitle">Join the MyPlant community today</p>
+            </div>
+
+            <form>
+                <div class="mb-3">
+                    <label for="fullname" class="form-label" data-translate="full-name-label">Full Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i
+                                class="bi bi-person text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0" id="fullname" data-translate="full-name-placeholder" placeholder="John Doe"
+                            required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label" data-translate="email-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i
+                                class="bi bi-envelope text-muted"></i></span>
+                        <input type="email" class="form-control border-start-0" id="email"
+                            data-translate="email-placeholder" placeholder="name@example.com" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label" data-translate="password-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i
+                                class="bi bi-lock text-muted"></i></span>
+                        <input type="password" class="form-control border-start-0" id="password"
+                            data-translate="password-placeholder" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label" data-translate="confirm-password-label">Confirm Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i
+                                class="bi bi-lock-fill text-muted"></i></span>
+                        <input type="password" class="form-control border-start-0" id="confirmPassword"
+                            data-translate="confirm-password-placeholder" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="policyCheck" required>
+                        <label class="form-check-label text-muted small" for="policyCheck">
+                            I agree to the <a href="#" class="text-success text-decoration-none">Terms of Service</a>
+                            and <a href="#" class="text-success text-decoration-none">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success" id="signupBtn" data-translate="signup-btn">Sign Up</button>
+
+                <div class="auth-footer">
+                    <p class="mb-0 text-muted"><span data-translate="have-account">Already have an account?</span> <a href="login.html" data-translate="login-btn">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Translations + Language Switcher -->
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const policyCheck = document.getElementById('policyCheck').checked;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            if (!policyCheck) {
+                alert("Please agree to the Terms of Service.");
+                return;
+            }
+
+            const btn = document.getElementById('signupBtn');
+            btn.disabled = true;
+            btn.innerText = "Signing up...";
+
+            try {
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Registration successful! Redirecting to login...");
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.message || "Registration failed");
+                    btn.disabled = false;
+                    btn.innerText = "Sign Up";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred. Please try again.");
+                btn.disabled = false;
+                btn.innerText = "Sign Up";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

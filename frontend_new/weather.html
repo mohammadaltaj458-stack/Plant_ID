@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather & Plant Advice</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<style>
+/* Reset default */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+.container {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    padding: 30px 25px;
+    border-radius: 20px;
+    text-align: center;
+    width: 380px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 28px;
+    color: #fffa;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+input, button {
+    width: 80%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+}
+
+input {
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+input::placeholder {
+    color: #ddd;
+}
+
+input:focus {
+    background: rgba(255,255,255,0.2);
+}
+
+button {
+    background: #ff8c00;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: #ffa500;
+    transform: translateY(-2px);
+}
+
+.weather-info {
+    margin-top: 20px;
+}
+
+.weather-card {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.advice {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.15);
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+
+<body>
+<nav style="background: #ffffff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+    <a href="index.html" style="color: #2e7d32; text-decoration: none; font-weight: bold; font-size: 18px;">
+        MyPlant <i class="bi bi-leaf-fill" style="color: #2e7d32;"></i>
+    </a>
+    <a href="javascript:void(0)" data-lang-toggle style="cursor: pointer; color: #2e7d32; text-decoration: none; font-weight: 600;">
+        🌐 AR | EN
+    </a>
+</nav>
+
+<div class="container">
+    <h2 data-translate="weather-tips"> Weather & Plant Tips</h2>
+
+    <div class="city-input">
+        <input type="text" id="cityName" data-translate="enter-city" placeholder="Enter city name">
+        <button onclick="getWeatherByCity()" data-translate="get-weather">Get Weather</button>
+    </div>
+
+    <div class="weather-info">
+        <div class="weather-card">
+            <p id="location" data-translate="getting-location">Getting location...</p>
+            <p id="temperature"></p>
+            <p id="description"></p>
+        </div>
+        <div class="advice" id="plantAdvice"></div>
+    </div>
+</div>
+
+<script>
+const apiKey = "17898bc3a17cd3e9c4cfc687c8d03277";
+
+function getWeather(lat, lon) {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=en`)
+    .then(res => { if (!res.ok) throw new Error("Error fetching weather"); return res.json(); })
+    .then(data => displayWeather(data))
+    .catch(err => showError(err.message));
+}
+
+function getWeatherByCity() {
+    const city = document.getElementById("cityName").value;
+    if (!city) return alert("Please enter a city name");
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`)
+    .then(res => { if (!res.ok) throw new Error("City not found"); return res.json(); })
+    .then(data => displayWeather(data))
+    .catch(err => showError(err.message));
+}
+
+function displayWeather(data) {
+    document.getElementById("location").innerText = data.name;
+    document.getElementById("temperature").innerText = " Temperature: " + data.main.temp + "°C";
+    document.getElementById("description").innerText = " Condition: " + data.weather[0].description;
+    giveAdvice(data.main.temp, data.weather[0].main);
+}
+
+function giveAdvice(temp, weatherMain) {
+    let advice = "";
+    if (weatherMain === "Rain") advice = " It's raining, do not water the plants today.";
+    else if (temp > 30) advice = " It's hot, water plants in the morning or evening.";
+    else if (temp < 10) advice = " It's cold, reduce watering.";
+    else advice = " The weather is mild, you can water normally.";
+    document.getElementById("plantAdvice").innerText = advice;
+}
+
+function showError(msg) {
+    document.getElementById("location").innerText = msg;
+    document.getElementById("temperature").innerText = "";
+    document.getElementById("description").innerText = "";
+    document.getElementById("plantAdvice").innerText = "";
+}
+
+// Geolocation
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        pos => getWeather(pos.coords.latitude, pos.coords.longitude),
+        () => document.getElementById("location").innerText = " Allow location or use city input above"
+    );
+} else {
+    document.getElementById("location").innerText = "Browser does not support geolocation";
+}
+</script>
+
+<!-- Translations + Language Switcher -->
+<script src="translations.js"></script>
+<script src="language.js"></script>
+
+</body>
+</html>
